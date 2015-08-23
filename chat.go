@@ -29,12 +29,10 @@ loop:
 
 			server.Errors <- err
 		}
-		log.Printf("Got: %v", string(buff[:n]))
 
 		if err := json.Unmarshal(buff[:n], &event); err != nil {
 			server.Errors <- err
 		}
-		log.Printf("Got new event of type: %v", event.Type)
 		switch event.Type {
 		case EVENT_MESSAGE:
 			if me != nil {
@@ -46,12 +44,12 @@ loop:
 			if me != nil {
 				SendEvent(conn, NewErrorEvent(errors.New("Can't login twice, dumbass")))
 			} else {
-				log.Printf("New login event from : %v", conn.RemoteAddr().String())
 				me = new(User)
 				me.conn = conn
 				me.Remote = conn.RemoteAddr().String()
 				me.Name = event.Username
 				me.Color = generateColor()
+				me.Events = make(chan Event)
 				if err := server.Join(me); err != nil {
 					SendEvent(conn, NewErrorEvent(err))
 					conn.Close()
@@ -59,16 +57,9 @@ loop:
 				}
 				me.ListenEvents()
 				SendEvent(conn, Event{Type: EVENT_STATUS, Text: "Login ok"})
-				log.Printf("Login worked.  Listening for events")
 			}
 		}
 	}
-}
-
-// TODO: This
-func generateColor() string {
-	// colorful.FastWarm
-	return "000000"
 }
 
 // getNextTopicID returns the next topic ID
@@ -100,6 +91,8 @@ type Event struct {
 	Error  string `json:"error,omitempty"`
 }
 
+// SendEvent will marshal an event to JSON and write it to the connection
+// it passes all errors to the Server error channel
 func SendEvent(conn *websocket.Conn, ev Event) {
 	data, err := json.Marshal(ev)
 	if err != nil {
@@ -111,8 +104,9 @@ func SendEvent(conn *websocket.Conn, ev Event) {
 	}
 }
 
+// NewErrorEvent returns an Event with the error field filled for you
 func NewErrorEvent(err error) Event {
-	return Event{Error: err.Error()}
+	return Event{Type: EVENT_ERROR, Error: err.Error()}
 }
 
 var server = NewServer()
@@ -123,12 +117,14 @@ type Server struct {
 	Errors chan error
 	Kill   chan struct{}
 	Users  map[string]*User
+	Topics map[int]*Topic
 }
 
+// NewServer creates a new Server with all of the fieldsd initialized
 func NewServer() *Server {
 	s := new(Server)
-	s.Events = make(chan Event)
-	s.Errors = make(chan error)
+	s.Events = make(chan Event, 20)
+	s.Errors = make(chan error, 5)
 	s.Kill = make(chan struct{})
 	s.Users = map[string]*User{}
 	return s
@@ -140,6 +136,7 @@ func (s *Server) Join(user *User) error {
 		return errors.New("server: Join called will nil user? This is a bug")
 	}
 
+	log.Printf("=> %v successfully joined!", user.Name)
 	// @TODO This probably needs to be mutexted?
 	s.Users[user.conn.RemoteAddr().String()] = user
 
@@ -153,23 +150,32 @@ func (s *Server) Leave(user *User) {
 	}
 
 	if _, ok := s.Users[user.conn.RemoteAddr().String()]; ok {
+		SendEvent(s.Users[user.conn.RemoteAddr().String()].conn, Event{Type: EVENT_STATUS, Text: "kbye"})
+
+		log.Printf("<= %v successfully left!", user.Name)
 		delete(s.Users, user.conn.RemoteAddr().String())
+		user.Kill <- struct{}{}
+		user.conn.Close()
 	}
 }
 
 // Start will start all of the event passing logic
 func (s *Server) Start() error {
 	go func() {
+	loop:
 		for {
 			select {
 			case err := <-s.Errors:
 				log.Printf("server error: %v", err.Error())
 			case <-s.Kill:
 				log.Printf("server logic shutting down")
+				break loop
 			case event := <-s.Events:
+				// Normally only send if topic ID is active or ID is -1 for testing purposes
 				for _, v := range s.Users {
 					v.Events <- event
 				}
+			default:
 			}
 		}
 	}()
@@ -193,6 +199,8 @@ type User struct {
 	Kill   chan struct{}   `json:"-"`
 }
 
+// ListenEvents starts a goroutine to read for events.  If stops
+// if you send anything to User.Kill
 func (u *User) ListenEvents() {
 	go func() {
 		var event Event
@@ -207,6 +215,7 @@ func (u *User) ListenEvents() {
 				u.conn.Write(data) // Ignore errors.
 			case <-u.Kill:
 				break loop
+			default:
 			}
 		}
 	}()
