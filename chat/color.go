@@ -1,4 +1,4 @@
-package main
+package chat
 
 import (
 	"github.com/lucasb-eyer/go-colorful"

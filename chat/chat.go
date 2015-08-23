@@ -1,4 +1,4 @@
-package main
+package chat
 
 import (
 	"encoding/json"
@@ -9,7 +9,7 @@ import (
 	"time"
 )
 
-func handlerChat(conn *websocket.Conn) {
+func HandlerChat(conn *websocket.Conn) {
 	log.Printf("New websocket connection")
 	// reuse buffers;  keep memory usage low!
 	buff := make([]byte, 1024)
@@ -27,19 +27,19 @@ loop:
 				break loop
 			}
 
-			server.Errors <- err
+			GlobalServer.Errors <- err
 		}
 
 		if err := json.Unmarshal(buff[:n], &event); err != nil {
-			server.Errors <- err
+			GlobalServer.Errors <- err
 		}
 		switch event.Type {
 		case EVENT_MESSAGE:
 			if me != nil {
-				server.Events <- event
+				GlobalServer.Events <- event
 			}
 		case EVENT_LEAVE:
-			server.Leave(me)
+			GlobalServer.Leave(me)
 		case EVENT_LOGIN:
 			if me != nil {
 				SendEvent(conn, NewErrorEvent(errors.New("Can't login twice, dumbass")))
@@ -50,7 +50,7 @@ loop:
 				me.Name = event.Username
 				me.Color = generateColor()
 				me.Events = make(chan Event)
-				if err := server.Join(me); err != nil {
+				if err := GlobalServer.Join(me); err != nil {
 					SendEvent(conn, NewErrorEvent(err))
 					conn.Close()
 					break loop
@@ -96,11 +96,11 @@ type Event struct {
 func SendEvent(conn *websocket.Conn, ev Event) {
 	data, err := json.Marshal(ev)
 	if err != nil {
-		server.Errors <- err
+		GlobalServer.Errors <- err
 	}
 
 	if _, err := conn.Write(data); err != nil {
-		server.Errors <- err
+		GlobalServer.Errors <- err
 	}
 }
 
@@ -109,7 +109,7 @@ func NewErrorEvent(err error) Event {
 	return Event{Type: EVENT_ERROR, Error: err.Error()}
 }
 
-var server = NewServer()
+var GlobalServer = NewServer()
 
 // Server represents a single chat server that will run
 type Server struct {
@@ -133,7 +133,7 @@ func NewServer() *Server {
 // Join should be called when a user wants to join a server
 func (s *Server) Join(user *User) error {
 	if user == nil {
-		return errors.New("server: Join called will nil user? This is a bug")
+		return errors.New("GlobalServer: Join called will nil user? This is a bug")
 	}
 
 	log.Printf("=> %v successfully joined!", user.Name)
@@ -166,9 +166,9 @@ func (s *Server) Start() error {
 		for {
 			select {
 			case err := <-s.Errors:
-				log.Printf("server error: %v", err.Error())
+				log.Printf("Server error: %v", err.Error())
 			case <-s.Kill:
-				log.Printf("server logic shutting down")
+				log.Printf("Server logic shutting down")
 				break loop
 			case event := <-s.Events:
 				// Normally only send if topic ID is active or ID is -1 for testing purposes
@@ -210,7 +210,7 @@ func (u *User) ListenEvents() {
 			case event = <-u.Events:
 				data, err := json.Marshal(event)
 				if err != nil {
-					server.Errors <- err
+					GlobalServer.Errors <- err
 				}
 				u.conn.Write(data) // Ignore errors.
 			case <-u.Kill:

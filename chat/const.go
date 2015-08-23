@@ -1,4 +1,4 @@
-package main
+package chat
 
 const (
 	EVENT_LOGIN   = "login"

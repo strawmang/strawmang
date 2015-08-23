@@ -2,6 +2,7 @@ package main
 
 import (
 	"github.com/gorilla/mux"
+	"github.com/strawmang/strawmang/chat"
 	"golang.org/x/net/websocket"
 	"io/ioutil"
 	"log"
@@ -36,7 +37,7 @@ func handlerIndex(rw http.ResponseWriter, req *http.Request) {
 }
 
 func main() {
-	server.Start()
+	chat.GlobalServer.Start()
 	r := mux.NewRouter()
 
 	r.HandleFunc("/", handlerIndex)
@@ -45,10 +46,10 @@ func main() {
 		if err != nil {
 			log.Printf("Websocket: %v\n", err.Error())
 		}
-		s := websocket.Server{Handler: websocket.Handler(handlerChat), Config: *conf}
+		s := websocket.Server{Handler: websocket.Handler(chat.HandlerChat), Config: *conf}
 		s.ServeHTTP(rw, req)
 	})
-	//r.Handle("/ws", websocket.Handler(handlerChat))
+	//r.Handle("/ws", websocket.Handler(chat.HandlerChat))
 
 	if err := http.ListenAndServe(":8080", r); err != nil {
 		log.Printf("http: %v", err.Error())
