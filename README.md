@@ -1,12 +1,15 @@
-# strawman
+# strawmang
 
-Strawman is a simple chat application.  
+Strawmang is a simple chat application.  
 
 There can be up to three chats running at any time.  If there are three chats
 you can vote to kill a thread.  If the majority of people connected vote to
 kill the chat disappears and a new one can be created.
 
 # API/endpoints
+
+None of this is final yet and I'm just using this as a base to figure out how
+the data structures will be orginized 
 
 All endpoints and websocket can optioannly return an error field that will
 indicate if any errors are returned
