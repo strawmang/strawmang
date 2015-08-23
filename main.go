@@ -8,6 +8,8 @@ import (
 	"os"
 )
 
+// Dev is true when we detect a development environment the default
+// stratagy is to check for .git in the current directory
 var Dev bool
 
 func init() {
