@@ -4,7 +4,7 @@ Strawmang is a simple chat application.
 
 There can be three debates where people can anonymously or not debate about a topic.
 People can at anytime start a vote to kill the current topic where it will get deleted
-and possibly replaced by another topic.  Topics can also be pruned after a certain amount
+and possibly replaced by another topic. Topics can also be pruned after a certain amount
 of time.
 
 The exact details haven't been completely established yet so it's still up in the air.
@@ -12,7 +12,7 @@ The exact details haven't been completely established yet so it's still up in th
 # API/endpoints
 
 None of this is final yet and I'm just using this as a base to figure out how
-the data structures will be orginized 
+the data structures will be organized 
 
 All endpoints and websocket can optioannly return an error field that will
 indicate if any errors are returned
