@@ -2,9 +2,12 @@
 
 Strawmang is a simple chat application.  
 
-There can be up to three chats running at any time.  If there are three chats
-you can vote to kill a thread.  If the majority of people connected vote to
-kill the chat disappears and a new one can be created.
+There can be three debates where people can anonymously or not debate about a topic.
+People can at anytime start a vote to kill the current topic where it will get deleted
+and possibly replaced by another topic.  Topics can also be pruned after a certain amount
+of time.
+
+The exact details haven't been completely established yet so it's still up in the air.
 
 # API/endpoints
 
