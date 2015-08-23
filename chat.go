@@ -32,23 +32,30 @@ loop:
 		if err := json.Unmarshal(buff[:n], &event); err != nil {
 			server.Errors <- err
 		}
-
-		// Maybe convert this into a switch statement case nil: ; default: ?
-		if event.Type == EVENT_LOGIN && me != nil {
-			SendMessage(conn, NewErrorEvent(errors.New("Can't login twice, dumbass")))
-		}
-		if event.Type == EVENT_LOGIN && me == nil {
-			me = new(User)
-			me.conn = conn
-			me.Name = event.Username
-			me.Remote = conn.RemoteAddr().String()
-			me.Color = generateColor()
-			if err := server.Join(me); err != nil {
-				SendMessage(conn, NewErrorEvent(err))
-				conn.Close()
-				break loop
+		switch event.Type {
+		case EVENT_MESSAGE:
+			if me != nil {
+				server.Events <- event
 			}
-			me.ListenEvents()
+		case EVENT_LEAVE:
+			server.Leave(me)
+		case EVENT_LOGIN:
+			if me != nil {
+				SendMessage(conn, NewErrorEvent(errors.New("Can't login twice, dumbass")))
+			} else {
+				me = new(User)
+				me.conn = conn
+				me.Name = event.Username
+				me.Remote = conn.RemoteAddr().String()
+				me.Color = generateColor()
+				if err := server.Join(me); err != nil {
+					SendMessage(conn, NewErrorEvent(err))
+					conn.Close()
+					break loop
+				}
+				me.ListenEvents()
+				log.Printf("Login worked.  Listening for events")
+			}
 		}
 	}
 }
@@ -110,21 +117,54 @@ var server = new(Server)
 type Server struct {
 	Events chan Event
 	Errors chan error
+	Kill   chan struct{}
+	Users  map[string]*User
 }
 
 // Join should be called when a user wants to join a server
-func (s *Server) Join(user *User) (chan Event, error) {
+func (s *Server) Join(user *User) error {
+	if user == nil {
+		return errors.New("server: Join called will nil user? This is a bug")
+	}
+
+	// @TODO This probably needs to be mutexted?
+	s.Users[user.conn.RemoteAddr().String()] = user
+
 	return nil
 }
 
-// Start will allow the server to start listening to connections
+// Leave deletes the user instance from the server if it exists
+func (s *Server) Leave(user *User) {
+	if user == nil {
+		return
+	}
+
+	if _, ok := s.Users[user.conn.RemoteAddr().String()]; ok {
+		delete(s.Users, user.conn.RemoteAddr().String())
+	}
+}
+
+// Start will start all of the event passing logic
 func (s *Server) Start() error {
-	return nil
+	go func() {
+		for {
+			select {
+			case err := <-s.Errors:
+				log.Printf("server error: %v", err.Error())
+			case <-s.Kill:
+				log.Printf("server logic shutting down")
+			case event := <-s.Events:
+				for _, v := range s.Users {
+					v.Events <- event
+				}
+			}
+		}
+	}()
 }
 
 // Stop will attempt to gracely stop the server and close the topic
-func (s *Server) Stop() error {
-	return nil
+func (s *Server) Stop() {
+	s.Kill <- struct{}{}
 }
 
 // User is a single user that can be connected to a user
