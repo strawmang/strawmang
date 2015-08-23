@@ -11,14 +11,14 @@ import (
 
 func handlerChat(conn *websocket.Conn) {
 	// reuse buffers;  keep memory usage low!
-	var buff [1024]byte
+	buff := make([]byte, 1024)
 	var event Event
 
 	var me *User
 	// TODO: This loop is going to get very unweildy.  Break it up
 loop:
 	for {
-		n, err := conn.Read(&buff)
+		n, err := conn.Read(buff)
 		if err != nil {
 			if err == io.EOF || err == io.ErrUnexpectedEOF {
 				log.Printf("[chat] EOF\n")
@@ -41,7 +41,7 @@ loop:
 			server.Leave(me)
 		case EVENT_LOGIN:
 			if me != nil {
-				SendMessage(conn, NewErrorEvent(errors.New("Can't login twice, dumbass")))
+				SendEvent(conn, NewErrorEvent(errors.New("Can't login twice, dumbass")))
 			} else {
 				me = new(User)
 				me.conn = conn
@@ -49,7 +49,7 @@ loop:
 				me.Remote = conn.RemoteAddr().String()
 				me.Color = generateColor()
 				if err := server.Join(me); err != nil {
-					SendMessage(conn, NewErrorEvent(err))
+					SendEvent(conn, NewErrorEvent(err))
 					conn.Close()
 					break loop
 				}
@@ -62,6 +62,7 @@ loop:
 
 // TODO: This
 func generateColor() string {
+	// colorful.FastWarm
 	return "000000"
 }
 
@@ -99,16 +100,16 @@ type Event struct {
 func SendEvent(conn *websocket.Conn, ev Event) {
 	data, err := json.Marshal(ev)
 	if err != nil {
-		server <- err
+		server.Errors <- err
 	}
 
 	if _, err := conn.Write(data); err != nil {
-		server <- err
+		server.Errors <- err
 	}
 }
 
 func NewErrorEvent(err error) Event {
-	return Event{Error: err}
+	return Event{Error: err.Error()}
 }
 
 var server = new(Server)
@@ -160,6 +161,7 @@ func (s *Server) Start() error {
 			}
 		}
 	}()
+	return nil
 }
 
 // Stop will attempt to gracely stop the server and close the topic

@@ -2,6 +2,7 @@ package main
 
 import (
 	"github.com/gorilla/mux"
+	"golang.org/x/net/websocket"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -38,7 +39,7 @@ func main() {
 	r := mux.NewRouter()
 
 	r.HandleFunc("/", handlerIndex)
-	r.HandleFunc("/ws", handlerChat)
+	r.Handle("/ws", websocket.Handler(handlerChat))
 
 	if err := http.ListenAndServe(":8080", r); err != nil {
 		log.Printf("http: %v", err.Error())
