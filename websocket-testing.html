@@ -7,16 +7,39 @@
   socket.onmessage = function(event) {
     console.log(event.data);
   }
+  socket.onerror = function(event) {
+    console.log(event.data);
+  }
   function login() {
     var name = document.getElementById("username").value;
     var data = JSON.stringify({type:"login", username:name});
     console.log("Sending: "+data);
     socket.send(data);
   }
+
+  function sendMessage() {
+    var text = document.getElementById("text").value;
+    var data = JSON.stringify({type:"message", text:text});
+    socket.send(data);
+  }
+  function leave() {
+    var data = JSON.stringify({type:"leave"});
+    socket.send(data);
+    socket.close();
+  }
   </script>
 </head>
 <body>
+  <h1>Websocket test page</h1>
+  <hr>
   <input id="username" type="text" placeholder="username"><br>
-  <button onclick="login();"><br>
+  <button onclick="login();">Login</button><br>
+  <hr>
+
+  <input id="text" type="text" placeholder="text"><br>
+  <button onclick="sendMessage();">Send Message</button><br>
+  <hr>
+
+  <button onclick="leave();">Logout</button>
 </body>
 </html>
