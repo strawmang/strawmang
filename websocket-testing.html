@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>websocket testing</title>
+  <script>
+  var socket = new WebSocket("ws://localhost:8080/ws");
+  socket.onmessage = function(event) {
+    console.log(event.data);
+  }
+  function login() {
+    var name = document.getElementById("username").value;
+    var data = JSON.stringify({type:"login", username:name});
+    console.log("Sending: "+data);
+    socket.send(data);
+  }
+  </script>
+</head>
+<body>
+  <input id="username" type="text" placeholder="username"><br>
+  <button onclick="login();"><br>
+</body>
+</html>
