@@ -36,10 +36,19 @@ func handlerIndex(rw http.ResponseWriter, req *http.Request) {
 }
 
 func main() {
+	server.Start()
 	r := mux.NewRouter()
 
 	r.HandleFunc("/", handlerIndex)
-	r.Handle("/ws", websocket.Handler(handlerChat))
+	r.HandleFunc("/ws", func(rw http.ResponseWriter, req *http.Request) {
+		conf, err := websocket.NewConfig("ws://localhost", "http://localhost")
+		if err != nil {
+			log.Printf("Websocket: %v\n", err.Error())
+		}
+		s := websocket.Server{Handler: websocket.Handler(handlerChat), Config: *conf}
+		s.ServeHTTP(rw, req)
+	})
+	//r.Handle("/ws", websocket.Handler(handlerChat))
 
 	if err := http.ListenAndServe(":8080", r); err != nil {
 		log.Printf("http: %v", err.Error())

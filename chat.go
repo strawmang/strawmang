@@ -10,6 +10,7 @@ import (
 )
 
 func handlerChat(conn *websocket.Conn) {
+	log.Printf("New websocket connection")
 	// reuse buffers;  keep memory usage low!
 	buff := make([]byte, 1024)
 	var event Event
@@ -28,10 +29,12 @@ loop:
 
 			server.Errors <- err
 		}
+		log.Printf("Got: %v", string(buff[:n]))
 
 		if err := json.Unmarshal(buff[:n], &event); err != nil {
 			server.Errors <- err
 		}
+		log.Printf("Got new event of type: %v", event.Type)
 		switch event.Type {
 		case EVENT_MESSAGE:
 			if me != nil {
@@ -43,10 +46,11 @@ loop:
 			if me != nil {
 				SendEvent(conn, NewErrorEvent(errors.New("Can't login twice, dumbass")))
 			} else {
+				log.Printf("New login event from : %v", conn.RemoteAddr().String())
 				me = new(User)
 				me.conn = conn
-				me.Name = event.Username
 				me.Remote = conn.RemoteAddr().String()
+				me.Name = event.Username
 				me.Color = generateColor()
 				if err := server.Join(me); err != nil {
 					SendEvent(conn, NewErrorEvent(err))
@@ -54,6 +58,7 @@ loop:
 					break loop
 				}
 				me.ListenEvents()
+				SendEvent(conn, Event{Type: EVENT_STATUS, Text: "Login ok"})
 				log.Printf("Login worked.  Listening for events")
 			}
 		}
@@ -80,21 +85,19 @@ func getNextTopicID() int {
 // message:
 // leave:
 // vote:
-//
-// TODO: Set omitempty on sane choices
 type Event struct {
 	// global
 	Type string `json:"type"`
 
 	// login
-	Username string `json:"username"`
+	Username string `json:"username,omitempty"`
 
 	// message
-	Text    string `json:"text"`
-	TopicID string `json:"topic-id"`
+	Text    string `json:"text,omitempty"`
+	TopicID string `json:"topic-id,omitempty"`
 
 	source string `json:"-"` // The remote address of the user
-	Error  string `json:"error"`
+	Error  string `json:"error,omitempty"`
 }
 
 func SendEvent(conn *websocket.Conn, ev Event) {
@@ -112,7 +115,7 @@ func NewErrorEvent(err error) Event {
 	return Event{Error: err.Error()}
 }
 
-var server = new(Server)
+var server = NewServer()
 
 // Server represents a single chat server that will run
 type Server struct {
@@ -120,6 +123,15 @@ type Server struct {
 	Errors chan error
 	Kill   chan struct{}
 	Users  map[string]*User
+}
+
+func NewServer() *Server {
+	s := new(Server)
+	s.Events = make(chan Event)
+	s.Errors = make(chan error)
+	s.Kill = make(chan struct{})
+	s.Users = map[string]*User{}
+	return s
 }
 
 // Join should be called when a user wants to join a server
