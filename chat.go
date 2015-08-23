@@ -2,7 +2,6 @@ package main
 
 import (
 	"golang.org/x/net/websocket"
-	"sync"
 	"time"
 )
 
@@ -28,22 +27,28 @@ type Server struct {
 }
 
 // Join should be called when a user wants to join a server
-func (s *Server) Join(user *User) error {}
+func (s *Server) Join(user *User) error {
+	return nil
+}
 
 // Start will allow the server to start listening to connections
-func (s *Server) Start() error {}
+func (s *Server) Start() error {
+	return nil
+}
 
 // Stop will attempt to gracely stop the server and close the topic
-func (s *Server) Stop() error {}
+func (s *Server) Stop() error {
+	return nil
+}
 
 // User is a single user that can be connected to a user
 // When a user joins a channel a goroutine is started to listen for
 // data on the websocket
 type User struct {
-	Name  string   `json:"name"`
-	IP    string   `json:"color"`
-	Color string   `json:"color"`
-	conn  *ws.Conn `json:"-"`
+	Name  string          `json:"name"`
+	IP    string          `json:"color"`
+	Color string          `json:"color"`
+	conn  *websocket.Conn `json:"-"`
 }
 
 // Listen starts a goroutine to listen for data on the websocket
