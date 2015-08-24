@@ -17,45 +17,30 @@ the data structures will be organized
 All endpoints and websocket can optioannly return an error field that will
 indicate if any errors are returned
 
-`/chats`
+`/status`
 
 Returns a JSON response listing the available chat endpoints.  Expected response:
 ``` JSON
 {
-  "chats": [
+  "status": [
   {
     "id": 5,
       "topic": "Tea vs coffee",
       "started": 1440290981,
       "ends": 1440294201,
-      "url": "/chat/5",
   },
   {
     "id": 6,
     "topic": "Gentoo vs Arch",
     "started": 1440290981,
     "ends": 1440294201,
-    "url": "/chat/6",
   },
   {
     "id": 7,
     "topic": "Javascript vs Coffeescript",
     "started": 1440290981,
     "ends": 1440294201,
-    "url": "/chat/7",
   },
   ],
 }
 ```
-
-`/users`
-
-Returns information about the set of online users
-``` JSON
-{
-  "online": 12,
-}
-
-```
-
-

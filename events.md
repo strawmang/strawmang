@@ -9,7 +9,10 @@ required fields: `username`
 ## message
 
 Client <-> Server
-required fields: `text`
+
+required fields C->S: `text`
+
+required fields S-C: `text` `color`
 
 ## leave
 
