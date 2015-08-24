@@ -35,11 +35,10 @@ function onmessage(event) {
 }
 
 function handleError(error) {
-  $("#chat").append('[<span style="color: red;">ERROR</span>] ' + error); 
+  $("#chat").append('[<span style="color: red;">ERROR</span>] ' + error + '<br>'); 
 }
 function handleStatus(text) {
-  $("#chat").append('[<span style="color: cyan;">SERVER</span>] ' + text); 
-
+  $("#chat").append('[<span style="color: cyan;">SERVER</span>] ' + text + '<br>');
 }
 
 function onerror(err) {
