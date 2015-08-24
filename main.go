@@ -1,13 +1,12 @@
 package main
 
 import (
-	"github.com/gorilla/mux"
-	"github.com/strawmang/strawmang/chat"
-	"golang.org/x/net/websocket"
-	"io/ioutil"
 	"log"
 	"net/http"
 	"os"
+
+	"github.com/gorilla/mux"
+	"github.com/strawmang/strawmang/chat"
 )
 
 // Dev is true when we detect a development environment the default

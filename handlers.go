@@ -1,5 +1,14 @@
 package main
 
+import (
+	"io/ioutil"
+	"log"
+	"net/http"
+
+	"github.com/strawmang/strawmang/chat"
+	"golang.org/x/net/websocket"
+)
+
 // TODO: Not production ready.  Needs to save the index in memory and only reload it if the file changes
 func handlerIndex(rw http.ResponseWriter, req *http.Request) {
 	data, err := ioutil.ReadFile("index.html")
