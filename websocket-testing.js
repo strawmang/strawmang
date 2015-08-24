@@ -10,6 +10,7 @@ function onmessage(event) {
       break;
     case "status":
       handleStatus(data.text);
+      getTopics();
       break;
     case "message":
       var chat = $("#chat");
