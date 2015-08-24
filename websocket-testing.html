@@ -6,6 +6,15 @@
   var socket = new WebSocket("ws://localhost:8080/ws");
   socket.onmessage = function(event) {
     console.log(event.data);
+    var data = JSON.parse(event.data);
+    switch (data.type) {
+      case "message":
+        var area = document.getElementById("area");
+        area.innerHTML = area.innerHTML + '<span style="color: #'+data.color+';">'+data.username+'</span>:  '+data.text+'<br>';
+        break;
+      case "status":
+        break;
+    }
   }
   socket.onerror = function(event) {
     console.log(event.data);
@@ -41,5 +50,12 @@
   <hr>
 
   <button onclick="leave();">Logout</button>
+
+  <hr>
+
+  <div id="area">
+    
+  </div>
+
 </body>
 </html>
