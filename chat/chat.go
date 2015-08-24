@@ -6,6 +6,7 @@ import (
 	"golang.org/x/net/websocket"
 	"io"
 	"log"
+	"sync"
 	"time"
 )
 
@@ -33,17 +34,25 @@ type Event struct {
 	Text    string `json:"text,omitempty"`
 	TopicID string `json:"topic-id,omitempty"`
 
+	// newtopic
+	OptionA string `json:"option-a"`
+	OptionB string `json:"option-b"`
+
 	source string `json:"-"` // The remote address of the user
 	Error  string `json:"error,omitempty"`
 }
 
 // Server represents a single chat server that will run
 type Server struct {
-	Events chan Event       `json:"-"`
-	Errors chan error       `json:"-"`
-	Kill   chan struct{}    `json:"-"`
 	Users  map[string]*User `json:"-"`
 	Topics map[int]*Topic   `json:"users"`
+
+	// internal shit
+	topicsMutext *sync.Mutex
+
+	Errors chan error    `json:"-"`
+	Kill   chan struct{} `json:"-"`
+	Events chan Event    `json:"-"`
 }
 
 // User is a single user that can be connected to a user
@@ -64,7 +73,7 @@ type Topic struct {
 	OptionA string `json:"option-a"`
 	OptionB string `json:"option-b"`
 
-	ID      string    `json:"id"`
+	ID      int       `json:"id"`
 	Created time.Time `json:"created"`
 	Ends    time.Time `json:"ends"`
 
@@ -97,7 +106,7 @@ func (s *Server) Leave(user *User) {
 		log.Printf("<= %v successfully left!", user.Name)
 		delete(s.Users, user.conn.RemoteAddr().String())
 		user.Kill <- struct{}{}
-		user.conn.Close()
+		//user.conn.Close()
 	}
 }
 
@@ -129,6 +138,21 @@ func (s *Server) Stop() {
 	s.Kill <- struct{}{}
 }
 
+// TryNewTopic attempts to create a new topic if we have less than three
+// topics.
+//
+// This method takes advantage of a sync.Mutex
+func (s *Server) TryNewTopic(t Topic) error {
+	s.topicsMutext.Lock()
+	defer s.topicsMutext.Unlock()
+	if len(s.Topics) >= MaxTopics {
+		return errors.New("too many topics already")
+	}
+	id := s.newTopicID()
+	s.Topics[id] = &t
+	return nil
+}
+
 func (s *Server) newTopicID() int {
 	i := 1
 	for k, _ := range s.Topics {
@@ -137,6 +161,26 @@ func (s *Server) newTopicID() int {
 		}
 	}
 	return i
+}
+
+// TODO: Make all the handlers send an error if not logged in
+
+func (u *User) HandleNewTopic(event Event) {
+	if u.LoggedIn {
+		// TODO: Check for whitespace and other weird characters.  Don't want any blank arguments.
+		if event.OptionA == "" || event.OptionB == "" {
+			SendEvent(u.conn, NewErrorEvent(errors.New("Can't have a blank topic!")))
+			return
+		}
+		t := new(Topic)
+		t.OptionA = event.OptionA
+		t.OptionB = event.OptionB
+		if err := GlobalServer.TryNewTopic(*t); err != nil {
+			SendEvent(u.conn, NewErrorEvent(err))
+			return
+		}
+		SendEvent(u.conn, Event{Type: EVENT_STATUS, Text: "Successfully added topic"})
+	}
 }
 
 func (u *User) HandleLogin(event Event) {
@@ -188,6 +232,7 @@ func (u *User) ListenEvents() {
 }
 
 func HandlerChat(conn *websocket.Conn) {
+	defer log.Printf("Closing websocket connection")
 	log.Printf("New websocket connection")
 
 	// reuse buffers;  keep memory usage low!
@@ -209,10 +254,14 @@ loop:
 			GlobalServer.Errors <- err
 		}
 
+		log.Printf("Got: '%v'", string(buff[:n]))
+
 		if err := json.Unmarshal(buff[:n], &event); err != nil {
 			GlobalServer.Errors <- err
 		}
 		switch event.Type {
+		case EVENT_NEWTOPIC:
+			me.HandleNewTopic(event)
 		case EVENT_MESSAGE:
 			me.HandleMessage(event)
 		case EVENT_LEAVE:
@@ -237,6 +286,8 @@ func NewServer() *Server {
 	s.Errors = make(chan error, 5)
 	s.Kill = make(chan struct{})
 	s.Users = map[string]*User{}
+
+	s.topicsMutext = new(sync.Mutex)
 	return s
 }
 

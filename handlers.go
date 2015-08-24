@@ -2,10 +2,12 @@ package main
 
 import (
 	"encoding/json"
+	"html/template"
 	"io/ioutil"
 	"log"
 	"net/http"
 
+	"github.com/lucasb-eyer/go-colorful"
 	"github.com/strawmang/strawmang/chat"
 	"golang.org/x/net/websocket"
 )
@@ -26,6 +28,32 @@ func handlerIndex(rw http.ResponseWriter, req *http.Request) {
 	}
 	rw.Write(data)
 }
+
+// START Fuck CORS
+
+func handlerTest(rw http.ResponseWriter, req *http.Request) {
+	data, err := ioutil.ReadFile("websocket-testing.html")
+	if err != nil {
+		// TODO: Pretty 503
+		rw.WriteHeader(http.StatusInternalServerError)
+		rw.Write([]byte(err.Error()))
+		return
+	}
+	rw.Write(data)
+}
+
+func handlerTestJS(rw http.ResponseWriter, req *http.Request) {
+	data, err := ioutil.ReadFile("websocket-testing.js")
+	if err != nil {
+		// TODO: Pretty 503
+		rw.WriteHeader(http.StatusInternalServerError)
+		rw.Write([]byte(err.Error()))
+		return
+	}
+	rw.Write(data)
+}
+
+// END Fuck CORS
 
 func handlerWs(rw http.ResponseWriter, req *http.Request) {
 	conf, err := websocket.NewConfig("ws://localhost", "http://localhost")
@@ -55,4 +83,16 @@ func handlerStatus(rw http.ResponseWriter, req *http.Request) {
 		log.Println(string(data))
 		rw.Write(data)
 	}
+}
+
+func handlerTestColor(rw http.ResponseWriter, req *http.Request) {
+	t := template.Must(template.ParseFiles("templates/colortest.tmpl"))
+
+	colors := []colorful.Color{}
+
+	for i := 0; i < 300; i++ {
+		colors = append(colors, chat.PopColor())
+	}
+
+	t.Execute(rw, colors)
 }

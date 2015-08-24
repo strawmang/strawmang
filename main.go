@@ -31,6 +31,13 @@ func main() {
 	r.HandleFunc("/ws", handlerWs)
 	r.HandleFunc("/status", handlerStatus)
 
+	if Dev {
+		r.HandleFunc("/test", handlerTest)
+		r.HandleFunc("/websocket-testing.js", handlerTestJS)
+
+		r.HandleFunc("/colortest", handlerTestColor)
+	}
+
 	if err := http.ListenAndServe(":8080", r); err != nil {
 		log.Printf("http: %v", err.Error())
 	}

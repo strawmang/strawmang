@@ -10,9 +10,9 @@ required fields: `username`
 
 Client <-> Server
 
-required fields C->S: `text`
+required fields C->S: `text` `topic-id`
 
-required fields S-C: `text` `color`
+required fields S-C: `text` `color` `topic-id`
 
 ## leave
 
@@ -42,11 +42,14 @@ required fields: `text`
 
 ## newtopic
 
+Just getting it all stubbed out.  Eventually we will have more paramaters to change the 
+behavior of the topic
+
 Used by the server to notify clients of a new topic
 
 Used by the client to request a new topic
 
 Client <-> Server
 
-required fields: Still being worked out
-required fields S->C: "topic-id"?
+required fields: C->S: `option-a` `option-b`
+required fields S->C: `topic-id`?

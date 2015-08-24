@@ -2,60 +2,45 @@
 <html>
 <head>
   <title>websocket testing</title>
-  <script>
-  var socket = new WebSocket("ws://localhost:8080/ws");
-  socket.onmessage = function(event) {
-    console.log(event.data);
-    var data = JSON.parse(event.data);
-    switch (data.type) {
-      case "message":
-        var area = document.getElementById("area");
-        area.innerHTML = area.innerHTML + '<span style="color: #'+data.color+';">'+data.username+'</span>:  '+data.text+'<br>';
-        break;
-      case "status":
-        break;
-    }
-  }
-  socket.onerror = function(event) {
-    console.log(event.data);
-  }
-  function login() {
-    var name = document.getElementById("username").value;
-    var data = JSON.stringify({type:"login", username:name});
-    console.log("Sending: "+data);
-    socket.send(data);
-  }
-
-  function sendMessage() {
-    var text = document.getElementById("text").value;
-    var data = JSON.stringify({type:"message", text:text});
-    socket.send(data);
-  }
-  function leave() {
-    var data = JSON.stringify({type:"leave"});
-    socket.send(data);
-    socket.close();
-  }
-  </script>
+  <!-- Fuckit we jquery now -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+  <script type="text/javascript" src="websocket-testing.js"></script>
 </head>
 <body>
   <h1>Websocket test page</h1>
+  
   <hr>
+  
+  <h4>Login</h4>
+  
   <input id="username" type="text" placeholder="username"><br>
   <button onclick="login();">Login</button><br>
+  
   <hr>
 
+  <h4>Send Message</h4>
+  
   <input id="text" type="text" placeholder="text"><br>
   <button onclick="sendMessage();">Send Message</button><br>
+
   <hr>
 
+  <h4>Static Events</h4>
+  
+  <button onclick="getTopics();">Get Topics</button>
   <button onclick="leave();">Logout</button>
+  <button onclick="connect();">Connect</button>
 
   <hr>
 
-  <div id="area">
-    
-  </div>
+  <h3>Topics</h3>
+  
+  <div id="topics"></div>
+  <hr>
+  
+  <h3>Chat</h3>
+
+  <div id="chat"></div>
 
 </body>
 </html>

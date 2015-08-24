@@ -1,0 +1,12 @@
+<!doctype html>
+<html lang=en>
+  <head>
+    <meta charset=utf-8>
+    <title>Color Test</title>
+  </head>
+  <body>
+    {{range .}}
+    <div style="height:25px; background-color: {{.Hex}};"></div>
+    {{end}}
+  </body>
+</html>

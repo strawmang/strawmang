@@ -3,6 +3,8 @@ package chat
 import (
 	"github.com/lucasb-eyer/go-colorful"
 	"log"
+	"math/rand"
+	"time"
 )
 
 var colors = []colorful.Color{}
@@ -21,8 +23,11 @@ func PopColor() colorful.Color {
 
 // AllocateColors returns a fresh batch of colors
 func AllocateColors() {
-	log.Printf("Allocating new generateColor batch")
-	colors = colorful.FastHappyPalette(1000)
+	rand.Seed(time.Now().UTC().UnixNano())
+	log.Printf("Allocating new color batch")
+	for i := 0; i < 100; i++ {
+		colors = append(colors, colorful.FastHappyColor())
+	}
 }
 
 // TODO: This
