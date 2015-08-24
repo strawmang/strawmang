@@ -9,6 +9,8 @@ import (
 	"time"
 )
 
+const MaxTopics = 3
+
 func HandlerChat(conn *websocket.Conn) {
 	log.Printf("New websocket connection")
 	// reuse buffers;  keep memory usage low!
@@ -125,11 +127,11 @@ var GlobalServer = NewServer()
 
 // Server represents a single chat server that will run
 type Server struct {
-	Events chan Event
-	Errors chan error
-	Kill   chan struct{}
-	Users  map[string]*User
-	Topics map[int]*Topic
+	Events chan Event       `json:"-"`
+	Errors chan error       `json:"-"`
+	Kill   chan struct{}    `json:"-"`
+	Users  map[string]*User `json:"-"`
+	Topics map[int]*Topic   `json:"users"`
 }
 
 // NewServer creates a new Server with all of the fieldsd initialized
