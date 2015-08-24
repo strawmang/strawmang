@@ -8,6 +8,9 @@ function onmessage(event) {
     case "error":
       handleError(data.error);
       break;
+    case "status":
+      handleStatus(data.text);
+      break;
     case "message":
       var chat = $("#chat");
       var topic = null;
@@ -28,13 +31,15 @@ function onmessage(event) {
       chat.append('[' + topicName + ']' +
         '<span style="color: #'+data.color+';">'+data.username+'</span>:  '+data.text+'<br>');
       break;
-    case "status":
-      break;
   }
 }
 
 function handleError(error) {
   $("#chat").append('[<span style="color: red;">ERROR</span>] ' + error); 
+}
+function handleStatus(text) {
+  $("#chat").append('[<span style="color: cyan;">SERVER</span>] ' + text); 
+
 }
 
 function onerror(err) {
