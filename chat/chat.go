@@ -32,7 +32,7 @@ type Event struct {
 
 	// message
 	Text    string `json:"text,omitempty"`
-	TopicID string `json:"topic-id,omitempty"`
+	TopicID int    `json:"topic-id,omitempty"`
 
 	// newtopic
 	OptionA string `json:"option-a"`
@@ -123,8 +123,10 @@ func (s *Server) Start() error {
 				break loop
 			case event := <-s.Events:
 				// Normally only send if topic ID is active or ID is -1 for testing purposes
-				for _, v := range s.Users {
-					v.Events <- event
+				if s.HasID(event.TopicID) {
+					for _, v := range s.Users {
+						v.Events <- event
+					}
 				}
 			default:
 			}
@@ -150,13 +152,25 @@ func (s *Server) TryNewTopic(t Topic) error {
 	}
 	id := s.newTopicID()
 	s.Topics[id] = &t
+	s.Topics[id].ID = id
+	log.Printf("New topic: %v", s.Topics[id])
 	return nil
+}
+
+// HasID returns true if we have a topic with the given ID
+func (s *Server) HasID(id int) bool {
+	for k, _ := range s.Topics {
+		if id == k {
+			return true
+		}
+	}
+	return false
 }
 
 func (s *Server) newTopicID() int {
 	i := 1
 	for k, _ := range s.Topics {
-		if k > i {
+		if k >= i {
 			i = k + 1
 		}
 	}
@@ -180,6 +194,8 @@ func (u *User) HandleNewTopic(event Event) {
 			return
 		}
 		SendEvent(u.conn, Event{Type: EVENT_STATUS, Text: "Successfully added topic"})
+	} else {
+		SendEvent(u.conn, NewErrorEvent(errors.New("You must login first")))
 	}
 }
 
@@ -206,6 +222,8 @@ func (u *User) HandleMessage(event Event) {
 	if u.LoggedIn {
 		event.Color = u.Color
 		GlobalServer.Events <- event
+	} else {
+		SendEvent(u.conn, NewErrorEvent(errors.New("You must login first")))
 	}
 }
 
@@ -286,6 +304,7 @@ func NewServer() *Server {
 	s.Errors = make(chan error, 5)
 	s.Kill = make(chan struct{})
 	s.Users = map[string]*User{}
+	s.Topics = map[int]*Topic{}
 
 	s.topicsMutext = new(sync.Mutex)
 	return s
