@@ -9,16 +9,23 @@ import (
 	"time"
 )
 
+// TODO: The server needs a better way to identify a person
+//       based off of their connection.  Currently if multiple
+//       people login from the same IP there will be strange
+//       things occuring
+
 const MaxTopics = 3
 
 func HandlerChat(conn *websocket.Conn) {
 	log.Printf("New websocket connection")
+
 	// reuse buffers;  keep memory usage low!
 	buff := make([]byte, 1024)
 	var event Event
+	me := new(User)
+	me.conn = conn
+	me.Remote = conn.RemoteAddr().String()
 
-	var me *User
-	// TODO: This loop is going to get very unweildy.  Break it up
 loop:
 	for {
 		n, err := conn.Read(buff)
@@ -28,7 +35,6 @@ loop:
 				conn.Close()
 				break loop
 			}
-
 			GlobalServer.Errors <- err
 		}
 
@@ -37,30 +43,13 @@ loop:
 		}
 		switch event.Type {
 		case EVENT_MESSAGE:
-			if me != nil {
-				event.Color = me.Color
-				GlobalServer.Events <- event
-			}
+			me.HandleMessage(event)
 		case EVENT_LEAVE:
-			GlobalServer.Leave(me)
+			me.HandleLeave(event)
 		case EVENT_LOGIN:
-			if me != nil {
-				SendEvent(conn, NewErrorEvent(errors.New("Can't login twice, dumbass")))
-			} else {
-				me = new(User)
-				me.conn = conn
-				me.Remote = conn.RemoteAddr().String()
-				me.Name = event.Username
-				me.Color = generateColor()
-				me.Events = make(chan Event)
-				if err := GlobalServer.Join(me); err != nil {
-					SendEvent(conn, NewErrorEvent(err))
-					conn.Close()
-					break loop
-				}
-				me.ListenEvents()
-				SendEvent(conn, Event{Type: EVENT_STATUS, Text: "Login ok"})
-			}
+			me.HandleLogin(event)
+		default:
+			log.Printf("Unhanlded event type in user handler")
 		}
 	}
 }
@@ -74,11 +63,7 @@ func getNextTopicID() int {
 
 // Event is a set of data that will be sent over the websocket
 //
-// Types:
-// login:
-// message:
-// leave:
-// vote:
+// See events.md for more information
 type Event struct {
 	// global
 	Type string `json:"type"`
@@ -208,12 +193,39 @@ func (s *Server) Stop() {
 // When a user joins a channel a goroutine is started to listen for
 // data on the websocket
 type User struct {
-	Name   string          `json:"name"`
-	Color  string          `json:"color"`
-	Remote string          `json:"-"`
-	conn   *websocket.Conn `json:"-"`
-	Events chan Event      `json:"-"`
-	Kill   chan struct{}   `json:"-"`
+	Name     string          `json:"name"`
+	Color    string          `json:"color"`
+	Remote   string          `json:"-"`
+	conn     *websocket.Conn `json:"-"`
+	Events   chan Event      `json:"-"`
+	Kill     chan struct{}   `json:"-"`
+	LoggedIn bool            `json:"logged-in"`
+}
+
+func (u *User) HandleLogin(event Event) {
+	if u.LoggedIn {
+		SendEvent(u.conn, NewErrorEvent(errors.New("Can't login twice, dumbass")))
+	} else {
+		u.LoggedIn = true
+		u.Name = event.Username
+		u.Color = generateColor()
+		u.Events = make(chan Event)
+		if err := GlobalServer.Join(u); err != nil {
+			SendEvent(u.conn, NewErrorEvent(err))
+		}
+		u.ListenEvents()
+		SendEvent(u.conn, Event{Type: EVENT_STATUS, Text: "Login ok"})
+	}
+}
+func (u *User) HandleLeave(event Event) {
+	GlobalServer.Leave(u)
+}
+func (u *User) HandleMessage(event Event) {
+	// TODO: Send an error if the user is not logged in
+	if u.LoggedIn {
+		event.Color = u.Color
+		GlobalServer.Events <- event
+	}
 }
 
 // ListenEvents starts a goroutine to read for events.  If stops
