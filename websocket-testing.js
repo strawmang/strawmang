@@ -29,7 +29,7 @@ function onmessage(event) {
         console.log(topic);
         topicName = topic["option-a"] + ' vs. ' + topic["option-b"];
       }
-      chat.append('[' + topicName + ']' +
+      chat.append('[' + topicName + '] ' +
         '<span style="color: #'+data.color+';">'+data.username+'</span>:  '+data.text+'<br>');
       break;
   }
