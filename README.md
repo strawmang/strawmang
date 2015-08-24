@@ -14,7 +14,7 @@ The exact details haven't been completely established yet so it's still up in th
 None of this is final yet and I'm just using this as a base to figure out how
 the data structures will be organized 
 
-All endpoints and websocket can optioannly return an error field that will
+All endpoints and websocket can optionally return an error field that will
 indicate if any errors are returned
 
 `/status`
