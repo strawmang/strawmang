@@ -16,50 +16,7 @@ import (
 
 const MaxTopics = 3
 
-func HandlerChat(conn *websocket.Conn) {
-	log.Printf("New websocket connection")
-
-	// reuse buffers;  keep memory usage low!
-	buff := make([]byte, 1024)
-	var event Event
-	me := new(User)
-	me.conn = conn
-	me.Remote = conn.RemoteAddr().String()
-
-loop:
-	for {
-		n, err := conn.Read(buff)
-		if err != nil {
-			if err == io.EOF || err == io.ErrUnexpectedEOF {
-				log.Printf("[chat] EOF\n")
-				conn.Close()
-				break loop
-			}
-			GlobalServer.Errors <- err
-		}
-
-		if err := json.Unmarshal(buff[:n], &event); err != nil {
-			GlobalServer.Errors <- err
-		}
-		switch event.Type {
-		case EVENT_MESSAGE:
-			me.HandleMessage(event)
-		case EVENT_LEAVE:
-			me.HandleLeave(event)
-		case EVENT_LOGIN:
-			me.HandleLogin(event)
-		default:
-			log.Printf("Unhanlded event type in user handler")
-		}
-	}
-}
-
-// getNextTopicID returns the next topic ID
-func getNextTopicID() int {
-	i := 1
-	// do logic
-	return i
-}
+var GlobalServer = NewServer()
 
 // Event is a set of data that will be sent over the websocket
 //
@@ -80,38 +37,6 @@ type Event struct {
 	Error  string `json:"error,omitempty"`
 }
 
-// SendEvent will marshal an event to JSON and write it to the connection
-// it passes all errors to the Server error channel
-func SendEvent(conn *websocket.Conn, ev Event) {
-	data, err := json.Marshal(ev)
-	if err != nil {
-		GlobalServer.Errors <- err
-	}
-
-	if _, err := conn.Write(data); err != nil {
-		GlobalServer.Errors <- err
-	}
-}
-
-func SendEventClient(conn *websocket.Conn, ev Event) error {
-	data, err := json.Marshal(ev)
-	if err != nil {
-		return err
-	}
-
-	if _, err := conn.Write(data); err != nil {
-		return err
-	}
-	return nil
-}
-
-// NewErrorEvent returns an Event with the error field filled for you
-func NewErrorEvent(err error) Event {
-	return Event{Type: EVENT_ERROR, Error: err.Error()}
-}
-
-var GlobalServer = NewServer()
-
 // Server represents a single chat server that will run
 type Server struct {
 	Events chan Event       `json:"-"`
@@ -121,14 +46,29 @@ type Server struct {
 	Topics map[int]*Topic   `json:"users"`
 }
 
-// NewServer creates a new Server with all of the fieldsd initialized
-func NewServer() *Server {
-	s := new(Server)
-	s.Events = make(chan Event, 20)
-	s.Errors = make(chan error, 5)
-	s.Kill = make(chan struct{})
-	s.Users = map[string]*User{}
-	return s
+// User is a single user that can be connected to a user
+// When a user joins a channel a goroutine is started to listen for
+// data on the websocket
+type User struct {
+	Name     string          `json:"name"`
+	Color    string          `json:"color"`
+	Remote   string          `json:"-"`
+	conn     *websocket.Conn `json:"-"`
+	Events   chan Event      `json:"-"`
+	Kill     chan struct{}   `json:"-"`
+	LoggedIn bool            `json:"logged-in"`
+}
+
+// Topic is a single topic that can be ran on a server
+type Topic struct {
+	OptionA string `json:"option-a"`
+	OptionB string `json:"option-b"`
+
+	ID      string    `json:"id"`
+	Created time.Time `json:"created"`
+	Ends    time.Time `json:"ends"`
+
+	events chan Event `json:"-"`
 }
 
 // Join should be called when a user wants to join a server
@@ -189,17 +129,14 @@ func (s *Server) Stop() {
 	s.Kill <- struct{}{}
 }
 
-// User is a single user that can be connected to a user
-// When a user joins a channel a goroutine is started to listen for
-// data on the websocket
-type User struct {
-	Name     string          `json:"name"`
-	Color    string          `json:"color"`
-	Remote   string          `json:"-"`
-	conn     *websocket.Conn `json:"-"`
-	Events   chan Event      `json:"-"`
-	Kill     chan struct{}   `json:"-"`
-	LoggedIn bool            `json:"logged-in"`
+func (s *Server) newTopicID() int {
+	i := 1
+	for k, _ := range s.Topics {
+		if k > i {
+			i = k + 1
+		}
+	}
+	return i
 }
 
 func (u *User) HandleLogin(event Event) {
@@ -250,14 +187,80 @@ func (u *User) ListenEvents() {
 	}()
 }
 
-// Topic is a single topic that can be ran on a server
-type Topic struct {
-	OptionA string `json:"option-a"`
-	OptionB string `json:"option-b"`
+func HandlerChat(conn *websocket.Conn) {
+	log.Printf("New websocket connection")
 
-	ID      string    `json:"id"`
-	Created time.Time `json:"created"`
-	Ends    time.Time `json:"ends"`
+	// reuse buffers;  keep memory usage low!
+	buff := make([]byte, 1024)
+	var event Event
+	me := new(User)
+	me.conn = conn
+	me.Remote = conn.RemoteAddr().String()
 
-	events chan Event `json:"-"`
+loop:
+	for {
+		n, err := conn.Read(buff)
+		if err != nil {
+			if err == io.EOF || err == io.ErrUnexpectedEOF {
+				log.Printf("[chat] EOF\n")
+				conn.Close()
+				break loop
+			}
+			GlobalServer.Errors <- err
+		}
+
+		if err := json.Unmarshal(buff[:n], &event); err != nil {
+			GlobalServer.Errors <- err
+		}
+		switch event.Type {
+		case EVENT_MESSAGE:
+			me.HandleMessage(event)
+		case EVENT_LEAVE:
+			me.HandleLeave(event)
+		case EVENT_LOGIN:
+			me.HandleLogin(event)
+		default:
+			log.Printf("Unhanlded event type in user handler")
+		}
+	}
+}
+
+// NewErrorEvent returns an Event with the error field filled for you
+func NewErrorEvent(err error) Event {
+	return Event{Type: EVENT_ERROR, Error: err.Error()}
+}
+
+// NewServer creates a new Server with all of the fieldsd initialized
+func NewServer() *Server {
+	s := new(Server)
+	s.Events = make(chan Event, 20)
+	s.Errors = make(chan error, 5)
+	s.Kill = make(chan struct{})
+	s.Users = map[string]*User{}
+	return s
+}
+
+// SendEvent will marshal an event to JSON and write it to the connection
+// it passes all errors to the Server error channel
+func SendEvent(conn *websocket.Conn, ev Event) {
+	data, err := json.Marshal(ev)
+	if err != nil {
+		GlobalServer.Errors <- err
+	}
+
+	if _, err := conn.Write(data); err != nil {
+		GlobalServer.Errors <- err
+	}
+}
+
+func SendEventClient(conn *websocket.Conn, ev Event) error {
+	data, err := json.Marshal(ev)
+	if err != nil {
+		return err
+	}
+
+	if _, err := conn.Write(data); err != nil {
+		return err
+	}
+	return nil
 }
