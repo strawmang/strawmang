@@ -104,6 +104,18 @@ func SendEvent(conn *websocket.Conn, ev Event) {
 	}
 }
 
+func SendEventClient(conn *websocket.Conn, ev Event) error {
+	data, err := json.Marshal(ev)
+	if err != nil {
+		return err
+	}
+
+	if _, err := conn.Write(data); err != nil {
+		return err
+	}
+	return nil
+}
+
 // NewErrorEvent returns an Event with the error field filled for you
 func NewErrorEvent(err error) Event {
 	return Event{Type: EVENT_ERROR, Error: err.Error()}
