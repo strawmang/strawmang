@@ -2,7 +2,6 @@
 // sorry..
 
 function onmessage(event) {
-  console.log(event.data);
   var data = JSON.parse(event.data);
   switch (data.type) {
     case "error":
@@ -17,7 +16,6 @@ function onmessage(event) {
       var topic = null;
       $.each(topics, function(key, value) {
         if (value.id == data["topic-id"]) {
-          console.log("match!");
           topic = value;
         }
       });
@@ -26,7 +24,6 @@ function onmessage(event) {
       if (topic === null) {
         topicName = "GLOBAL";
       } else {
-        console.log(topic);
         topicName = topic["option-a"] + ' vs. ' + topic["option-b"];
       }
       chat.append('[' + topicName + '] ' +
@@ -43,7 +40,7 @@ function handleStatus(text) {
 }
 
 function onerror(err) {
-  console.log(err);
+  handleError(err);
 }
 
 var socket = new WebSocket("ws://localhost:8080/ws");
@@ -66,22 +63,19 @@ function connect() {
 function login() {
   var name = document.getElementById("username").value;
   var data = JSON.stringify({type:"login", username:name});
-  console.log("Sending: "+data);
   socket.send(data);
 }
 
 function sendMessage() {
   switch (socket.readyState) {
     case 0:
-      console.log("That connetion isn't open yet!");
+      handleError("That connetion isn't open yet!");
       return;
-    case 1:
-      break;
     case 2:
-      console.log("That socket is closing!");
+      handleError("That socket is closing!");
       return;
     case 3:
-      console.log("That socket is closed!");
+      handleError("That socket is closed!");
       return;
   }
   var text = document.getElementById("text").value;
@@ -114,7 +108,6 @@ function getTopics() {
   req.onload = function() { 
     var data = JSON.parse(req.responseText);
     topics = data.topics;
-    console.log(req.responseText);
     topicsElem = document.getElementById("topics");
     topicsElem.innerHTML = "";
     for (var i = 0; i < data.topics.length; i++) {

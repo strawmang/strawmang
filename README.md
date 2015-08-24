@@ -22,7 +22,7 @@ indicate if any errors are returned
 Returns a JSON response listing the available chat endpoints.  Expected response:
 ``` JSON
 {
-  "status": [
+  "topics": [
   {
     "id": 5,
       "topic": "Tea vs coffee",
@@ -42,5 +42,6 @@ Returns a JSON response listing the available chat endpoints.  Expected response
     "ends": 1440294201,
   },
   ],
+  "users": 15,
 }
 ```
