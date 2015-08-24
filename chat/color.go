@@ -27,6 +27,6 @@ func AllocateColors() {
 
 // TODO: This
 func generateColor() string {
-	// colorful.FastWarm
-	return "000000"
+	// Too hacky looking?
+	return PopColor().Hex()[1:]
 }

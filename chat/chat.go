@@ -38,6 +38,7 @@ loop:
 		switch event.Type {
 		case EVENT_MESSAGE:
 			if me != nil {
+				event.Color = me.Color
 				GlobalServer.Events <- event
 			}
 		case EVENT_LEAVE:
@@ -84,6 +85,7 @@ type Event struct {
 
 	// login
 	Username string `json:"username,omitempty"`
+	Color    string `json:"color,omitempty"`
 
 	// message
 	Text    string `json:"text,omitempty"`
@@ -153,6 +155,7 @@ func (s *Server) Join(user *User) error {
 	log.Printf("=> %v successfully joined!", user.Name)
 	// @TODO This probably needs to be mutexted?
 	s.Users[user.conn.RemoteAddr().String()] = user
+	user.Color = generateColor()
 
 	return nil
 }
