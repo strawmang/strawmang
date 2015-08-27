@@ -1,11 +1,12 @@
 package main
 
 import (
-	"github.com/gorilla/mux"
-	"io/ioutil"
 	"log"
 	"net/http"
 	"os"
+
+	"github.com/gorilla/mux"
+	"github.com/strawmang/strawmang/chat"
 )
 
 // Dev is true when we detect a development environment the default
@@ -22,23 +23,20 @@ func init() {
 	}
 }
 
-// TODO: Not production ready.  Needs to save the index in memory and only reload it if the file changes
-func handlerIndex(rw http.ResponseWriter, req *http.Request) {
-	data, err := ioutil.ReadFile("index.html")
-	if err != nil {
-		// TODO: Pretty 503
-		rw.WriteHeader(http.StatusInternalServerError)
-		rw.Write([]byte(err.Error()))
-		return
-	}
-	rw.Write(data)
-}
-
 func main() {
+	chat.GlobalServer.Start()
 	r := mux.NewRouter()
 
 	r.HandleFunc("/", handlerIndex)
-	r.HandleFunc("/ws", handlerChat)
+	r.HandleFunc("/ws", handlerWs)
+	r.HandleFunc("/status", handlerStatus)
+
+	if Dev {
+		r.HandleFunc("/test", handlerTest)
+		r.HandleFunc("/websocket-testing.js", handlerTestJS)
+
+		r.HandleFunc("/colortest", handlerTestColor)
+	}
 
 	if err := http.ListenAndServe(":8080", r); err != nil {
 		log.Printf("http: %v", err.Error())
