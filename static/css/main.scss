@@ -1,0 +1,7 @@
+// compile: wt -w -b . static/css/main.scss
+
+@import "vendor/bourbon/bourbon";
+
+h1 {
+	font-size: 64px; //ayy
+}
