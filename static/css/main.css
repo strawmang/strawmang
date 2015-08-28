@@ -413,7 +413,7 @@ th {
   font-size: 13px;
   line-height: 18px; }
   /* line 7, /Users/imogen/git/strawmang/static/css/_type.scss */
-  .strawman .h0 {
+  .strawman .h0, .strawman .submit > div > input {
     font-weight: 700;
     font-size: 34px;
     line-height: 47px; }
@@ -423,7 +423,7 @@ th {
     font-size: 20px;
     line-height: 28px; }
   /* line 17, /Users/imogen/git/strawmang/static/css/_type.scss */
-  .strawman h2, .strawman .h2, .strawman .chat > header > div > span {
+  .strawman h2, .strawman .h2, .strawman .nav > input, .strawman .chat > header > div > span {
     font-weight: 700;
     font-size: 15px;
     line-height: 21px; }
@@ -431,7 +431,7 @@ th {
   .strawman .hb, .strawman .chat > ul > li > span {
     font-weight: 700; }
   /* line 26, /Users/imogen/git/strawmang/static/css/_type.scss */
-  .strawman .d0 {
+  .strawman .d0, .strawman .submit > span {
     font-size: 34px;
     line-height: 47px;
     font-weight: 400; }
@@ -441,7 +441,7 @@ th {
     line-height: 28px;
     font-weight: 400; }
   /* line 37, /Users/imogen/git/strawmang/static/css/_type.scss */
-  .strawman .d2 {
+  .strawman .d2, .strawman .chat > footer > div > input {
     font-size: 15px;
     line-height: 21px;
     font-weight: 400; }
@@ -506,7 +506,10 @@ html {
     -o-align-items: center;
     align-items: center;
     -ms-flex-align: center; }
-  /* line 16, /Users/imogen/git/strawmang/static/css/_components.scss */
+    /* line 15, /Users/imogen/git/strawmang/static/css/_components.scss */
+    .strawman .nav > input {
+      text-align: right; }
+  /* line 20, /Users/imogen/git/strawmang/static/css/_components.scss */
   .strawman .columns {
     display: -webkit-box;
     display: -moz-box;
@@ -515,7 +518,7 @@ html {
     display: -moz-flex;
     display: -ms-flexbox;
     display: flex; }
-    /* line 18, /Users/imogen/git/strawmang/static/css/_components.scss */
+    /* line 22, /Users/imogen/git/strawmang/static/css/_components.scss */
     .strawman .columns > section {
       -webkit-box-flex: 1;
       -moz-box-flex: 1;
@@ -528,7 +531,7 @@ html {
       -moz-flex-basis: 0;
       flex-basis: 0;
       -ms-flex-preferred-size: 0; }
-  /* line 23, /Users/imogen/git/strawmang/static/css/_components.scss */
+  /* line 27, /Users/imogen/git/strawmang/static/css/_components.scss */
   .strawman .chat {
     display: -webkit-box;
     display: -moz-box;
@@ -547,10 +550,10 @@ html {
     -moz-flex-direction: column;
     flex-direction: column;
     -ms-flex-direction: column; }
-    /* line 26, /Users/imogen/git/strawmang/static/css/_components.scss */
+    /* line 30, /Users/imogen/git/strawmang/static/css/_components.scss */
     .strawman .chat > header {
       background-color: #fafafa; }
-      /* line 28, /Users/imogen/git/strawmang/static/css/_components.scss */
+      /* line 32, /Users/imogen/git/strawmang/static/css/_components.scss */
       .strawman .chat > header > div {
         display: -webkit-box;
         display: -moz-box;
@@ -568,10 +571,10 @@ html {
         -o-justify-content: space-between;
         justify-content: space-between;
         -ms-flex-pack: justify; }
-      /* line 35, /Users/imogen/git/strawmang/static/css/_components.scss */
+      /* line 39, /Users/imogen/git/strawmang/static/css/_components.scss */
       .strawman .chat > header > progress {
         width: 100%; }
-    /* line 39, /Users/imogen/git/strawmang/static/css/_components.scss */
+    /* line 43, /Users/imogen/git/strawmang/static/css/_components.scss */
     .strawman .chat > ul {
       -webkit-box-flex: 1;
       -moz-box-flex: 1;
@@ -582,13 +585,13 @@ html {
       flex: 1;
       padding-left: 0;
       list-style-type: none; }
-      /* line 46, /Users/imogen/git/strawmang/static/css/_components.scss */
+      /* line 50, /Users/imogen/git/strawmang/static/css/_components.scss */
       .strawman .chat > ul > li > span::after {
         content: "\00a0"; }
-    /* line 52, /Users/imogen/git/strawmang/static/css/_components.scss */
+    /* line 56, /Users/imogen/git/strawmang/static/css/_components.scss */
     .strawman .chat > footer {
       background-color: #fafafa; }
-      /* line 54, /Users/imogen/git/strawmang/static/css/_components.scss */
+      /* line 58, /Users/imogen/git/strawmang/static/css/_components.scss */
       .strawman .chat > footer > div {
         display: -webkit-box;
         display: -moz-box;
@@ -615,7 +618,7 @@ html {
         -o-align-items: center;
         align-items: center;
         -ms-flex-align: center; }
-        /* line 58, /Users/imogen/git/strawmang/static/css/_components.scss */
+        /* line 62, /Users/imogen/git/strawmang/static/css/_components.scss */
         .strawman .chat > footer > div > input {
           -webkit-box-flex: 1;
           -moz-box-flex: 1;
@@ -624,10 +627,10 @@ html {
           -moz-flex: 1;
           -ms-flex: 1;
           flex: 1; }
-      /* line 62, /Users/imogen/git/strawmang/static/css/_components.scss */
+      /* line 67, /Users/imogen/git/strawmang/static/css/_components.scss */
       .strawman .chat > footer > progress {
         width: 100%; }
-  /* line 67, /Users/imogen/git/strawmang/static/css/_components.scss */
+  /* line 72, /Users/imogen/git/strawmang/static/css/_components.scss */
   .strawman .submit {
     background-color: #fafafa;
     display: -webkit-box;
@@ -665,18 +668,40 @@ html {
     -o-align-items: flex-start;
     align-items: flex-start;
     -ms-flex-align: start; }
-    /* line 73, /Users/imogen/git/strawmang/static/css/_components.scss */
+    /* line 78, /Users/imogen/git/strawmang/static/css/_components.scss */
     .strawman .submit > div {
       max-width: 100%; }
-      /* line 75, /Users/imogen/git/strawmang/static/css/_components.scss */
+      /* line 80, /Users/imogen/git/strawmang/static/css/_components.scss */
       .strawman .submit > div > input {
         width: 100%;
         border: none;
         padding: 0; }
-    /* line 81, /Users/imogen/git/strawmang/static/css/_components.scss */
+    /* line 87, /Users/imogen/git/strawmang/static/css/_components.scss */
     .strawman .submit > span {
       color: rgba(0, 0, 0, 0.54); }
-  /* line 85, /Users/imogen/git/strawmang/static/css/_components.scss */
+  /* line 95, /Users/imogen/git/strawmang/static/css/_components.scss */
+  .strawman input:focus,
+  .strawman select:focus,
+  .strawman textarea:focus,
+  .strawman button:focus {
+    outline: none; }
+  /* line 98, /Users/imogen/git/strawmang/static/css/_components.scss */
   .strawman input {
     background-color: transparent;
     border-style: none; }
+    /* line 3, /Users/imogen/git/strawmang/static/bower_components/bourbon/app/assets/stylesheets/css3/_placeholder.scss */
+    .strawman input::-webkit-input-placeholder {
+      color: rgba(0, 0, 0, 0.26);
+      line-height: initial; }
+    /* line 3, /Users/imogen/git/strawmang/static/bower_components/bourbon/app/assets/stylesheets/css3/_placeholder.scss */
+    .strawman input::-moz-placeholder {
+      color: rgba(0, 0, 0, 0.26);
+      line-height: initial; }
+    /* line 3, /Users/imogen/git/strawmang/static/bower_components/bourbon/app/assets/stylesheets/css3/_placeholder.scss */
+    .strawman input:-moz-placeholder {
+      color: rgba(0, 0, 0, 0.26);
+      line-height: initial; }
+    /* line 3, /Users/imogen/git/strawmang/static/bower_components/bourbon/app/assets/stylesheets/css3/_placeholder.scss */
+    .strawman input:-ms-input-placeholder {
+      color: rgba(0, 0, 0, 0.26);
+      line-height: initial; }

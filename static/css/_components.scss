@@ -12,6 +12,10 @@ html {
 		@include display(flex);
 		@include justify-content(space-between);
 		@include align-items(center);
+		> input {
+			@extend .h2;
+			text-align: right;
+		}
 	}
 	.columns {
 		@include display(flex);
@@ -56,6 +60,7 @@ html {
 				@include justify-content(space-between);
 				@include align-items(center);
 				> input {
+					@extend .d2;
 					@include flex(1);
 				}
 			}
@@ -73,17 +78,29 @@ html {
 		> div {
 			max-width: 100%;
 			> input {
+				@extend .h0;
 				width: 100%;
 				border: none;
 				padding: 0;
 			}
 		}
 		> span {
+			@extend .d0;
 			color: $ck2;
 		}
+	}
+	input:focus,
+	select:focus,
+	textarea:focus,
+	button:focus {
+	    outline: none;
 	}
 	input {
 		background-color: transparent;
 		border-style: none;
+		@include placeholder {
+			color: $ck3;
+			line-height: initial;
+		}
 	}
 }
