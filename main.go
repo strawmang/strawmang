@@ -13,6 +13,9 @@ import (
 // stratagy is to check for .git in the current directory
 var Dev bool
 
+// Commit is the current commit strawmang was built on
+var Commit string
+
 func init() {
 	if _, err := os.Stat(".git"); err == nil {
 		Dev = true
@@ -31,11 +34,25 @@ func main() {
 	r.HandleFunc("/ws", handlerWs)
 	r.HandleFunc("/status", handlerStatus)
 
+	// Maybe: https://groups.google.com/forum/#!topic/golang-nuts/bStLPdIVM6w ?
+	//      : Removing directory listing
+
+	// TODO: Route from memory using go-bindata
+	//     : https://github.com/elazarl/go-bindata-assetfs
+
+	fs := http.FileServer(http.Dir("static/"))
+
+	r.PathPrefix("/").Handler(fs)
+
 	if Dev {
 		r.HandleFunc("/test", handlerTest)
 		r.HandleFunc("/websocket-testing.js", handlerTestJS)
 
 		r.HandleFunc("/colortest", handlerTestColor)
+	}
+
+	if Commit != "" {
+		log.Printf("  Running commit %s", Commit)
 	}
 
 	if err := http.ListenAndServe(":8080", r); err != nil {
