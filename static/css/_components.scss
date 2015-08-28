@@ -31,10 +31,12 @@ html {
 			@include flex(1);
 			@include flex-basis(0);
 			> header {
+				height: 64px;
 				border-top-left-radius: 2px;
 				border-top-right-radius: 2px;
 			}
 			> footer {
+				height: 64px;
 				border-bottom-left-radius: 2px;
 				border-bottom-right-radius: 2px;
 			}
@@ -45,22 +47,30 @@ html {
 		@include flex-direction(column);
 		> header {
 			background-color: $ckb;
+			position: relative;
 			> div {
+				height: 100%;
 				@include display(flex);
 				@include justify-content(space-between);
+				@include align-items(center);
 				> span {
 					@extend .h2;
+					margin: 0 16px;
 				}
 			}
 			> progress {
 				width: 100%;
+				position: absolute;
+				bottom: 0;
 			}
 		}
 		> ul {
-			@include flex(1);
-			padding-left: 0;
+			padding: 4px 16px;
+			margin: 0;
 			list-style-type: none;
+			@include flex(1);
 			> li {
+				margin: 8px 0;
 				> span {
 					@extend .hb;
 					&::after {
@@ -71,17 +81,32 @@ html {
 		}
 		> footer {
 			background-color: $ckb;
+			position: relative;
 			> div {
+				height: 100%;
+				padding: 0 8px;
 				@include display(flex);
 				@include justify-content(space-between);
 				@include align-items(center);
 				> input {
 					@extend .d2;
 					@include flex(1);
+					margin: 0 8px;
+				}
+				> button {
+					margin: 0 8px;
+					&:first-child {
+						margin-left: 4px;
+					}
+					&:last-child {
+						margin-right: 4px;
+					}
 				}
 			}
 			> progress {
 				width: 100%;
+				position: absolute;
+				bottom: 0;
 			}
 		}
 	}
@@ -125,8 +150,9 @@ html {
 		background: none;
 		border: none;
 		font-size: 24px;
-		line-height: 24px;
+		line-height: 0;
 		color: $ck2;
+		padding: 0;
 		&:hover {
 			color: $ck1;
 		}
@@ -137,11 +163,21 @@ html {
 			margin: .5px;
 		}
 	}
-	progress {
-		$prefixes: ("-webkit-", "-moz-", "-ms-", "-o-");
-		@each $prefix in $prefixes {
-			::#{$prefix}selection {
-			 }                  
+	@each $prefix in "-webkit-", "-moz-", "-ms-", "-o-" {
+		progress::#{unquote($prefix)}progress-inner-element {
+			@include appearance(none);
+		}                  
+	}
+	@each $prefix in "-webkit-", "-moz-", "-ms-", "-o-" {
+		progress::#{unquote($prefix)}progress-bar {
+			@include appearance(none);
+			background-color: $ck2;
 		}
+	}
+	@each $prefix in "-webkit-", "-moz-", "-ms-", "-o-" {
+		progress::#{unquote($prefix)}progress-value {
+			@include appearance(none);
+			background-color: $cb;
+		}                  
 	}
 }

@@ -38,6 +38,10 @@ type Event struct {
 	OptionA string `json:"option-a"`
 	OptionB string `json:"option-b"`
 
+	// vote
+	// notice: this UPDATES the mask.
+	VoteMask voteOption `json:"vote-mask,omitempty"`
+
 	source string `json:"-"` // The remote address of the user
 	Error  string `json:"error,omitempty"`
 }
@@ -59,13 +63,14 @@ type Server struct {
 // When a user joins a channel a goroutine is started to listen for
 // data on the websocket
 type User struct {
-	Name     string          `json:"name"`
-	Color    string          `json:"color"`
-	Remote   string          `json:"-"`
-	conn     *websocket.Conn `json:"-"`
-	Events   chan Event      `json:"-"`
-	Kill     chan struct{}   `json:"-"`
-	LoggedIn bool            `json:"logged-in"`
+	Name     string             `json:"name"`
+	Color    string             `json:"color"`
+	Remote   string             `json:"-"`
+	conn     *websocket.Conn    `json:"-"`
+	Events   chan Event         `json:"-"`
+	Kill     chan struct{}      `json:"-"`
+	LoggedIn bool               `json:"logged-in"`
+	Votes    map[int]voteOption `json:"voteMask"`
 }
 
 // Topic is a single topic that can be ran on a server
@@ -87,7 +92,7 @@ func (s *Server) Join(user *User) error {
 	}
 
 	log.Printf("=> %v successfully joined!", user.Name)
-	// @TODO This probably needs to be mutexted?
+	// TODO This probably needs to be mutexted?
 	s.Users[user.conn.RemoteAddr().String()] = user
 	user.Color = generateColor()
 
@@ -214,9 +219,19 @@ func (u *User) HandleLogin(event Event) {
 		SendEvent(u.conn, Event{Type: EVENT_STATUS, Text: "Login ok"})
 	}
 }
+
 func (u *User) HandleLeave(event Event) {
 	GlobalServer.Leave(u)
 }
+
+func (u *User) HandleVote(event Event) {
+	if GlobalServer.HasID(event.TopicID) {
+		u.Votes[event.TopicID] = event.VoteMask
+	} else {
+		SendEvent(u.conn, NewErrorEvent(errors.New("cannot vote on a non-active topic")))
+	}
+}
+
 func (u *User) HandleMessage(event Event) {
 	// TODO: Send an error if the user is not logged in
 	if u.LoggedIn {
@@ -254,6 +269,7 @@ func HandlerChat(conn *websocket.Conn) {
 	log.Printf("New websocket connection")
 
 	// reuse buffers;  keep memory usage low!
+	// TODO: Look into reusing memory buffers
 	buff := make([]byte, 1024)
 	var event Event
 	me := new(User)
@@ -286,6 +302,8 @@ loop:
 			me.HandleLeave(event)
 		case EVENT_LOGIN:
 			me.HandleLogin(event)
+		case EVENT_VOTE:
+			me.HandleVote(event)
 		default:
 			log.Printf("Unhanlded event type in user handler")
 		}

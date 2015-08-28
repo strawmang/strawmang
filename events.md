@@ -12,7 +12,7 @@ Client <-> Server
 
 required fields C->S: `text` `topic-id`
 
-required fields S-C: `text` `color` `topic-id`
+required fields S->C: `text` `color` `topic-id`
 
 ## leave
 
@@ -22,7 +22,9 @@ Client -> Server
 
 Client <-> Server
 
-Still being worked out
+required fields C->S `vote-mask` `topic-id`
+
+required fields S->C `usernmae` `color` `topic-id` `vote-mask` Currently not implemented
 
 ## error
 

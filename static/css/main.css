@@ -541,13 +541,15 @@ html {
       -ms-flex-preferred-size: 0; }
       /* line 33, /Users/imogen/git/strawmang/static/css/_components.scss */
       .strawman .columns > section > header {
+        height: 64px;
         border-top-left-radius: 2px;
         border-top-right-radius: 2px; }
-      /* line 37, /Users/imogen/git/strawmang/static/css/_components.scss */
+      /* line 38, /Users/imogen/git/strawmang/static/css/_components.scss */
       .strawman .columns > section > footer {
+        height: 64px;
         border-bottom-left-radius: 2px;
         border-bottom-right-radius: 2px; }
-  /* line 43, /Users/imogen/git/strawmang/static/css/_components.scss */
+  /* line 45, /Users/imogen/git/strawmang/static/css/_components.scss */
   .strawman .chat {
     display: -webkit-box;
     display: -moz-box;
@@ -566,49 +568,13 @@ html {
     -moz-flex-direction: column;
     flex-direction: column;
     -ms-flex-direction: column; }
-    /* line 46, /Users/imogen/git/strawmang/static/css/_components.scss */
+    /* line 48, /Users/imogen/git/strawmang/static/css/_components.scss */
     .strawman .chat > header {
-      background-color: #fafafa; }
-      /* line 48, /Users/imogen/git/strawmang/static/css/_components.scss */
+      background-color: #fafafa;
+      position: relative; }
+      /* line 51, /Users/imogen/git/strawmang/static/css/_components.scss */
       .strawman .chat > header > div {
-        display: -webkit-box;
-        display: -moz-box;
-        display: box;
-        display: -webkit-flex;
-        display: -moz-flex;
-        display: -ms-flexbox;
-        display: flex;
-        -webkit-box-pack: justify;
-        -moz-box-pack: justify;
-        box-pack: justify;
-        -webkit-justify-content: space-between;
-        -moz-justify-content: space-between;
-        -ms-justify-content: space-between;
-        -o-justify-content: space-between;
-        justify-content: space-between;
-        -ms-flex-pack: justify; }
-      /* line 55, /Users/imogen/git/strawmang/static/css/_components.scss */
-      .strawman .chat > header > progress {
-        width: 100%; }
-    /* line 59, /Users/imogen/git/strawmang/static/css/_components.scss */
-    .strawman .chat > ul {
-      -webkit-box-flex: 1;
-      -moz-box-flex: 1;
-      box-flex: 1;
-      -webkit-flex: 1;
-      -moz-flex: 1;
-      -ms-flex: 1;
-      flex: 1;
-      padding-left: 0;
-      list-style-type: none; }
-      /* line 66, /Users/imogen/git/strawmang/static/css/_components.scss */
-      .strawman .chat > ul > li > span::after {
-        content: "\00a0"; }
-    /* line 72, /Users/imogen/git/strawmang/static/css/_components.scss */
-    .strawman .chat > footer {
-      background-color: #fafafa; }
-      /* line 74, /Users/imogen/git/strawmang/static/css/_components.scss */
-      .strawman .chat > footer > div {
+        height: 100%;
         display: -webkit-box;
         display: -moz-box;
         display: box;
@@ -634,7 +600,66 @@ html {
         -o-align-items: center;
         align-items: center;
         -ms-flex-align: center; }
-        /* line 78, /Users/imogen/git/strawmang/static/css/_components.scss */
+        /* line 56, /Users/imogen/git/strawmang/static/css/_components.scss */
+        .strawman .chat > header > div > span {
+          margin: 0 16px; }
+      /* line 61, /Users/imogen/git/strawmang/static/css/_components.scss */
+      .strawman .chat > header > progress {
+        width: 100%;
+        position: absolute;
+        bottom: 0; }
+    /* line 67, /Users/imogen/git/strawmang/static/css/_components.scss */
+    .strawman .chat > ul {
+      padding: 4px 16px;
+      margin: 0;
+      list-style-type: none;
+      -webkit-box-flex: 1;
+      -moz-box-flex: 1;
+      box-flex: 1;
+      -webkit-flex: 1;
+      -moz-flex: 1;
+      -ms-flex: 1;
+      flex: 1; }
+      /* line 72, /Users/imogen/git/strawmang/static/css/_components.scss */
+      .strawman .chat > ul > li {
+        margin: 8px 0; }
+        /* line 76, /Users/imogen/git/strawmang/static/css/_components.scss */
+        .strawman .chat > ul > li > span::after {
+          content: "\00a0"; }
+    /* line 82, /Users/imogen/git/strawmang/static/css/_components.scss */
+    .strawman .chat > footer {
+      background-color: #fafafa;
+      position: relative; }
+      /* line 85, /Users/imogen/git/strawmang/static/css/_components.scss */
+      .strawman .chat > footer > div {
+        height: 100%;
+        padding: 0 8px;
+        display: -webkit-box;
+        display: -moz-box;
+        display: box;
+        display: -webkit-flex;
+        display: -moz-flex;
+        display: -ms-flexbox;
+        display: flex;
+        -webkit-box-pack: justify;
+        -moz-box-pack: justify;
+        box-pack: justify;
+        -webkit-justify-content: space-between;
+        -moz-justify-content: space-between;
+        -ms-justify-content: space-between;
+        -o-justify-content: space-between;
+        justify-content: space-between;
+        -ms-flex-pack: justify;
+        -webkit-box-align: center;
+        -moz-box-align: center;
+        box-align: center;
+        -webkit-align-items: center;
+        -moz-align-items: center;
+        -ms-align-items: center;
+        -o-align-items: center;
+        align-items: center;
+        -ms-flex-align: center; }
+        /* line 91, /Users/imogen/git/strawmang/static/css/_components.scss */
         .strawman .chat > footer > div > input {
           -webkit-box-flex: 1;
           -moz-box-flex: 1;
@@ -642,11 +667,23 @@ html {
           -webkit-flex: 1;
           -moz-flex: 1;
           -ms-flex: 1;
-          flex: 1; }
-      /* line 83, /Users/imogen/git/strawmang/static/css/_components.scss */
+          flex: 1;
+          margin: 0 8px; }
+        /* line 96, /Users/imogen/git/strawmang/static/css/_components.scss */
+        .strawman .chat > footer > div > button {
+          margin: 0 8px; }
+          /* line 98, /Users/imogen/git/strawmang/static/css/_components.scss */
+          .strawman .chat > footer > div > button:first-child {
+            margin-left: 4px; }
+          /* line 101, /Users/imogen/git/strawmang/static/css/_components.scss */
+          .strawman .chat > footer > div > button:last-child {
+            margin-right: 4px; }
+      /* line 106, /Users/imogen/git/strawmang/static/css/_components.scss */
       .strawman .chat > footer > progress {
-        width: 100%; }
-  /* line 88, /Users/imogen/git/strawmang/static/css/_components.scss */
+        width: 100%;
+        position: absolute;
+        bottom: 0; }
+  /* line 113, /Users/imogen/git/strawmang/static/css/_components.scss */
   .strawman .submit {
     padding: 0 16px;
     background-color: #fafafa;
@@ -685,25 +722,25 @@ html {
     -o-align-items: flex-start;
     align-items: flex-start;
     -ms-flex-align: start; }
-    /* line 95, /Users/imogen/git/strawmang/static/css/_components.scss */
+    /* line 120, /Users/imogen/git/strawmang/static/css/_components.scss */
     .strawman .submit > div {
       max-width: 100%;
       position: relative; }
-      /* line 98, /Users/imogen/git/strawmang/static/css/_components.scss */
+      /* line 123, /Users/imogen/git/strawmang/static/css/_components.scss */
       .strawman .submit > div > input {
         width: 100%;
         box-sizing: border-box;
         border: none; }
-    /* line 105, /Users/imogen/git/strawmang/static/css/_components.scss */
+    /* line 130, /Users/imogen/git/strawmang/static/css/_components.scss */
     .strawman .submit > span {
       color: rgba(0, 0, 0, 0.54); }
-  /* line 113, /Users/imogen/git/strawmang/static/css/_components.scss */
+  /* line 138, /Users/imogen/git/strawmang/static/css/_components.scss */
   .strawman input:focus,
   .strawman select:focus,
   .strawman textarea:focus,
   .strawman button:focus {
     outline: none; }
-  /* line 116, /Users/imogen/git/strawmang/static/css/_components.scss */
+  /* line 141, /Users/imogen/git/strawmang/static/css/_components.scss */
   .strawman input {
     background-color: transparent;
     border-style: none; }
@@ -723,19 +760,112 @@ html {
     .strawman input:-ms-input-placeholder {
       color: rgba(0, 0, 0, 0.26);
       line-height: initial; }
-  /* line 124, /Users/imogen/git/strawmang/static/css/_components.scss */
+  /* line 149, /Users/imogen/git/strawmang/static/css/_components.scss */
   .strawman button {
     background: none;
     border: none;
     font-size: 24px;
-    line-height: 24px;
-    color: rgba(0, 0, 0, 0.54); }
-    /* line 130, /Users/imogen/git/strawmang/static/css/_components.scss */
+    line-height: 0;
+    color: rgba(0, 0, 0, 0.54);
+    padding: 0; }
+    /* line 156, /Users/imogen/git/strawmang/static/css/_components.scss */
     .strawman button:hover {
       color: rgba(0, 0, 0, 0.87); }
-    /* line 133, /Users/imogen/git/strawmang/static/css/_components.scss */
+    /* line 159, /Users/imogen/git/strawmang/static/css/_components.scss */
     .strawman button:active {
       font-size: 23px;
       line-height: 23px;
       position: relative;
       margin: .5px; }
+  /* line 166, /Users/imogen/git/strawmang/static/css/_components.scss */
+  .strawman progress::-webkit-progress-inner-element {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    -ms-appearance: none;
+    -o-appearance: none;
+    appearance: none; }
+  /* line 166, /Users/imogen/git/strawmang/static/css/_components.scss */
+  .strawman progress::-moz-progress-inner-element {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    -ms-appearance: none;
+    -o-appearance: none;
+    appearance: none; }
+  /* line 166, /Users/imogen/git/strawmang/static/css/_components.scss */
+  .strawman progress::-ms-progress-inner-element {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    -ms-appearance: none;
+    -o-appearance: none;
+    appearance: none; }
+  /* line 166, /Users/imogen/git/strawmang/static/css/_components.scss */
+  .strawman progress::-o-progress-inner-element {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    -ms-appearance: none;
+    -o-appearance: none;
+    appearance: none; }
+  /* line 171, /Users/imogen/git/strawmang/static/css/_components.scss */
+  .strawman progress::-webkit-progress-bar {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    -ms-appearance: none;
+    -o-appearance: none;
+    appearance: none;
+    background: rgba(0, 0, 0, 0.54); }
+  /* line 171, /Users/imogen/git/strawmang/static/css/_components.scss */
+  .strawman progress::-moz-progress-bar {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    -ms-appearance: none;
+    -o-appearance: none;
+    appearance: none;
+    background: rgba(0, 0, 0, 0.54); }
+  /* line 171, /Users/imogen/git/strawmang/static/css/_components.scss */
+  .strawman progress::-ms-progress-bar {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    -ms-appearance: none;
+    -o-appearance: none;
+    appearance: none;
+    background: rgba(0, 0, 0, 0.54); }
+  /* line 171, /Users/imogen/git/strawmang/static/css/_components.scss */
+  .strawman progress::-o-progress-bar {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    -ms-appearance: none;
+    -o-appearance: none;
+    appearance: none;
+    background: rgba(0, 0, 0, 0.54); }
+  /* line 177, /Users/imogen/git/strawmang/static/css/_components.scss */
+  .strawman progress::-webkit-progress-value {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    -ms-appearance: none;
+    -o-appearance: none;
+    appearance: none;
+    background-color: #7699d4; }
+  /* line 177, /Users/imogen/git/strawmang/static/css/_components.scss */
+  .strawman progress::-moz-progress-value {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    -ms-appearance: none;
+    -o-appearance: none;
+    appearance: none;
+    background-color: #7699d4; }
+  /* line 177, /Users/imogen/git/strawmang/static/css/_components.scss */
+  .strawman progress::-ms-progress-value {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    -ms-appearance: none;
+    -o-appearance: none;
+    appearance: none;
+    background-color: #7699d4; }
+  /* line 177, /Users/imogen/git/strawmang/static/css/_components.scss */
+  .strawman progress::-o-progress-value {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    -ms-appearance: none;
+    -o-appearance: none;
+    appearance: none;
+    background-color: #7699d4; }
