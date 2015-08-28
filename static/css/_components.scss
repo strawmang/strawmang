@@ -24,6 +24,7 @@ html {
 		@include display(flex);
 		@include flex-direction(column);
 		> header {
+			background-color: $ckb;
 			> div {
 				@include display(flex);
 				@include justify-content(space-between);
@@ -49,6 +50,7 @@ html {
 			}
 		}
 		> footer {
+			background-color: $ckb;
 			> div {
 				@include display(flex);
 				@include justify-content(space-between);
@@ -63,6 +65,7 @@ html {
 		}
 	}
 	.submit {
+		background-color: $ckb;
 		@include display(flex);
 		@include flex-direction(column);
 		@include justify-content(center);
@@ -75,5 +78,12 @@ html {
 				padding: 0;
 			}
 		}
+		> span {
+			color: $ck2;
+		}
+	}
+	input {
+		background-color: transparent;
+		border-style: none;
 	}
 }
