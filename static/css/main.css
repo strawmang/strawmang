@@ -670,22 +670,24 @@ html {
     -ms-flex-align: start; }
     /* line 78, /Users/imogen/git/strawmang/static/css/_components.scss */
     .strawman .submit > div {
-      max-width: 100%; }
-      /* line 80, /Users/imogen/git/strawmang/static/css/_components.scss */
+      max-width: 100%;
+      position: relative; }
+      /* line 81, /Users/imogen/git/strawmang/static/css/_components.scss */
       .strawman .submit > div > input {
-        width: 100%;
+        width: auto;
+        box-sizing: border-box;
         border: none;
-        padding: 0; }
-    /* line 87, /Users/imogen/git/strawmang/static/css/_components.scss */
+        padding: 0 16px; }
+    /* line 89, /Users/imogen/git/strawmang/static/css/_components.scss */
     .strawman .submit > span {
       color: rgba(0, 0, 0, 0.54); }
-  /* line 95, /Users/imogen/git/strawmang/static/css/_components.scss */
+  /* line 97, /Users/imogen/git/strawmang/static/css/_components.scss */
   .strawman input:focus,
   .strawman select:focus,
   .strawman textarea:focus,
   .strawman button:focus {
     outline: none; }
-  /* line 98, /Users/imogen/git/strawmang/static/css/_components.scss */
+  /* line 100, /Users/imogen/git/strawmang/static/css/_components.scss */
   .strawman input {
     background-color: transparent;
     border-style: none; }
@@ -705,17 +707,17 @@ html {
     .strawman input:-ms-input-placeholder {
       color: rgba(0, 0, 0, 0.26);
       line-height: initial; }
-  /* line 106, /Users/imogen/git/strawmang/static/css/_components.scss */
+  /* line 108, /Users/imogen/git/strawmang/static/css/_components.scss */
   .strawman button {
     background: none;
     border: none;
     font-size: 24px;
     line-height: 24px;
     color: rgba(0, 0, 0, 0.54); }
-    /* line 112, /Users/imogen/git/strawmang/static/css/_components.scss */
+    /* line 114, /Users/imogen/git/strawmang/static/css/_components.scss */
     .strawman button:hover {
       color: rgba(0, 0, 0, 0.87); }
-    /* line 115, /Users/imogen/git/strawmang/static/css/_components.scss */
+    /* line 117, /Users/imogen/git/strawmang/static/css/_components.scss */
     .strawman button:active {
       font-size: 23px;
       line-height: 23px;
