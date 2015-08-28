@@ -705,3 +705,19 @@ html {
     .strawman input:-ms-input-placeholder {
       color: rgba(0, 0, 0, 0.26);
       line-height: initial; }
+  /* line 106, /Users/imogen/git/strawmang/static/css/_components.scss */
+  .strawman button {
+    background: none;
+    border: none;
+    font-size: 24px;
+    line-height: 24px;
+    color: rgba(0, 0, 0, 0.54); }
+    /* line 112, /Users/imogen/git/strawmang/static/css/_components.scss */
+    .strawman button:hover {
+      color: rgba(0, 0, 0, 0.87); }
+    /* line 115, /Users/imogen/git/strawmang/static/css/_components.scss */
+    .strawman button:active {
+      font-size: 23px;
+      line-height: 23px;
+      position: relative;
+      margin: .5px; }

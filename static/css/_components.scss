@@ -103,4 +103,20 @@ html {
 			line-height: initial;
 		}
 	}
+	button {
+		background: none;
+		border: none;
+		font-size: 24px;
+		line-height: 24px;
+		color: $ck2;
+		&:hover {
+			color: $ck1;
+		}
+		&:active {
+			font-size: 23px;
+			line-height: 23px;
+			position: relative;
+			margin: .5px;
+		}
+	}
 }
