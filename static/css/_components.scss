@@ -1,5 +1,8 @@
 html {
 	height: 100%;
+	> body > *:last-child {
+		margin-bottom: 8px;
+	}
 }
 .strawman {
 	height: 100%;
@@ -9,6 +12,7 @@ html {
 		@include flex(1);
 	}
 	.nav {
+		padding: 0 24px;
 		@include display(flex);
 		@include justify-content(space-between);
 		@include align-items(center);
@@ -19,9 +23,21 @@ html {
 	}
 	.columns {
 		@include display(flex);
+		padding: 0 4px;
 		> section {
+			margin: 0 4px;
+			border-radius: 2px;
+			box-shadow: $ck4 0 0 0 1px;
 			@include flex(1);
 			@include flex-basis(0);
+			> header {
+				border-top-left-radius: 2px;
+				border-top-right-radius: 2px;
+			}
+			> footer {
+				border-bottom-left-radius: 2px;
+				border-bottom-right-radius: 2px;
+			}
 		}
 	}
 	.chat {
@@ -70,6 +86,7 @@ html {
 		}
 	}
 	.submit {
+		padding: 0 16px;
 		background-color: $ckb;
 		@include display(flex);
 		@include flex-direction(column);
@@ -80,10 +97,9 @@ html {
 			position: relative;
 			> input {
 				@extend .h0;
-				width: auto;
+				width: 100%;
 				box-sizing: border-box;
 				border: none;
-				padding: 0 16px;
 			}
 		}
 		> span {
@@ -119,6 +135,13 @@ html {
 			line-height: 23px;
 			position: relative;
 			margin: .5px;
+		}
+	}
+	progress {
+		$prefixes: ("-webkit-", "-moz-", "-ms-", "-o-");
+		@each $prefix in $prefixes {
+			::#{$prefix}selection {
+			 }                  
 		}
 	}
 }
