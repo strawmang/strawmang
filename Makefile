@@ -8,5 +8,4 @@ windows:
 	GOOS=windows go build $(flags)
 linux:
 	GOOS=linux go build $(flags)
-release:
 	
