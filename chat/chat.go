@@ -63,14 +63,14 @@ type Server struct {
 // When a user joins a channel a goroutine is started to listen for
 // data on the websocket
 type User struct {
-	Name     string          `json:"name"`
-	Color    string          `json:"color"`
-	Remote   string          `json:"-"`
-	conn     *websocket.Conn `json:"-"`
-	Events   chan Event      `json:"-"`
-	Kill     chan struct{}   `json:"-"`
-	LoggedIn bool            `json:"logged-in"`
-	Votes    voteOption      `json:"voteMask"`
+	Name     string             `json:"name"`
+	Color    string             `json:"color"`
+	Remote   string             `json:"-"`
+	conn     *websocket.Conn    `json:"-"`
+	Events   chan Event         `json:"-"`
+	Kill     chan struct{}      `json:"-"`
+	LoggedIn bool               `json:"logged-in"`
+	Votes    map[int]voteOption `json:"voteMask"`
 }
 
 // Topic is a single topic that can be ran on a server
@@ -225,7 +225,11 @@ func (u *User) HandleLeave(event Event) {
 }
 
 func (u *User) HandleVote(event Event) {
-	u.Votes = event.VoteMask
+	if GlobalServer.HasID(event.TopicID) {
+		u.Votes[event.TopicID] = event.VoteMask
+	} else {
+		SendEvent(u.conn, NewErrorEvent(errors.New("cannot vote on a non-active topic")))
+	}
 }
 
 func (u *User) HandleMessage(event Event) {
