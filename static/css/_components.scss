@@ -1,0 +1,79 @@
+html {
+	height: 100%;
+}
+.strawman {
+	height: 100%;
+	@include display(flex);
+	@include flex-direction(column);
+	> main {
+		@include flex(1);
+	}
+	.nav {
+		@include display(flex);
+		@include justify-content(space-between);
+		@include align-items(center);
+	}
+	.columns {
+		@include display(flex);
+		> section {
+			@include flex(1);
+			@include flex-basis(0);
+		}
+	}
+	.chat {
+		@include display(flex);
+		@include flex-direction(column);
+		> header {
+			> div {
+				@include display(flex);
+				@include justify-content(space-between);
+				> span {
+					@extend .h2;
+				}
+			}
+			> progress {
+				width: 100%;
+			}
+		}
+		> ul {
+			@include flex(1);
+			padding-left: 0;
+			list-style-type: none;
+			> li {
+				> span {
+					@extend .hb;
+					&::after {
+						content: "\00a0";
+					}
+				}
+			}
+		}
+		> footer {
+			> div {
+				@include display(flex);
+				@include justify-content(space-between);
+				@include align-items(center);
+				> input {
+					@include flex(1);
+				}
+			}
+			> progress {
+				width: 100%;
+			}
+		}
+	}
+	.submit {
+		@include display(flex);
+		@include flex-direction(column);
+		@include justify-content(center);
+		@include align-items(flex-start);
+		> div {
+			max-width: 100%;
+			> input {
+				width: 100%;
+				border: none;
+				padding: 0;
+			}
+		}
+	}
+}

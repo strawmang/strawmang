@@ -1,7 +1,9 @@
 // compile: wt -w -b . static/css/main.scss
+// (watching broken on os x?)
 
-@import "vendor/bourbon/bourbon";
+@import "../bower_components/bourbon/app/assets/stylesheets/_bourbon";
 
-h1 {
-	font-size: 64px; //ayy
-}
+@import "../bower_components/normalize-scss/_normalize";
+@import "type";
+@import "theme";
+@import "components";

@@ -2,20 +2,22 @@
 <html>
 <head>
 	<title>strawman</title>
+	<link rel="stylesheet" type="text/css" href="css/main.css">
+	<link rel="stylesheet" type="text/css" href="bower_components/mdi/css/materialdesignicons.css">
 	<script src="//use.typekit.net/hvo6ksf.js"></script>
 	<script>try{Typekit.load({ async: true });}catch(e){}</script>
 </head>
-<body class="tk-bookmania">
-	<header>
+<body class="tk-bookmania strawman light">
+	<header class="nav">
 		<h1>strawman</h1>
-		<input type="text" name="handle" maxlength="20" autocomplete="off">
+		<input class="h2" type="text" name="handle" maxlength="20" autocomplete="off" placeholder="ayylmao">
 	</header>
-	<main>
-		<section>
+	<main class="columns">
+		<section class="chat">
 			<header>
 				<div>
-					<h2>bernie sanders</h2>
-					<h2>donald trump</h2>
+					<span>bernie sanders</span>
+					<span>donald trump</span>
 				</div>
 				<progress value="3" max="5">
 			</header>
@@ -28,7 +30,7 @@
 			</ul>
 			<footer>
 				<div>
-					<input type="text" name="message" maxlength="320">
+					<input class="d2" type="text" name="message" maxlength="320" placeholder="say something nice">
 					<button type="button">
 						<span class="mdi mdi-close"></span>
 					</button>
@@ -36,11 +38,16 @@
 				<progress value="2" max="3">
  			</footer>
 		</section>
-		<section>
-			<input type="text" name="topic_x" maxlength="40">
-			<span>vs</span>
-			<input type="text" name="topic_y" maxlength="40">
+		<section class="submit">
+			<div>
+				<input class="h0" type="text" name="thing_x" maxlength="40" placeholder="thing 1">
+			</div>
+			<span class="d0">vs</span>
+			<div>
+				<input class="h0" type="text" name="thing_y" maxlength="40" placeholder="thing 2">
+			</div>
 		</section>
+		<section></section>
 	</main>
 </body>
 </html>

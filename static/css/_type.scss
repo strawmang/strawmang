@@ -1,0 +1,39 @@
+.strawman {
+	// body
+	font-weight: 300;
+	font-size: 13px;
+	line-height: 18px;
+	// heading
+	.h0 {
+		font-weight: 700;
+		font-size: 34px;
+		line-height: 47px;
+	}
+	h1, .h1 {
+		font-weight: 700;
+		font-size: 20px;
+		line-height: 28px;
+	}
+	h2, .h2 {
+		font-weight: 700;
+		font-size: 15px;
+		line-height: 21px;
+	}
+	.hb {
+		font-weight: 700;
+	}
+	// display
+	.d0 {
+		font-size: 34px;
+		line-height: 47px;
+	}
+
+	.d1 {
+		font-size: 20px;
+		line-height: 28px;
+	}
+	.d2 {
+		font-size: 15px;
+		line-height: 21px;
+	}
+}

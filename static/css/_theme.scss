@@ -1,0 +1,11 @@
+$ck0: black;
+$ck1: rgba(0,0,0,0.87);
+$ck2: rgba(0,0,0,0.54);
+$ck3: rgba(0,0,0,0.26);
+$ck4: rgba(0,0,0,0.12);
+
+.strawman {
+	&.light {
+		color: $ck1;
+	}
+}
