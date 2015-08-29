@@ -1,11 +1,11 @@
 html {
-	color: $ck0;
 	height: 100%;
 	> body > *:last-child {
 		margin-bottom: 8px;
 	}
 }
 .strawman {
+	color: $ck0;
 	height: 100%;
 	@include display(flex);
 	@include flex-direction(column);
@@ -62,6 +62,9 @@ html {
 					position: relative;
 					top: 2px;
 					margin: 0 16px;
+					&:first-of-type {
+						color: $cb;
+					}
 				}
 			}
 			> progress {
@@ -177,7 +180,7 @@ html {
 	}  
 	@each $prefix in "-webkit-", "-moz-", "-ms-", "-o-" {
 		progress::#{unquote($prefix)}progress-bar {
-			background-color: $ck2;
+			background-color: $ck0;
 		}
 	}
 	@each $prefix in "-webkit-", "-moz-", "-ms-", "-o-" {
