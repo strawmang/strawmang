@@ -18,6 +18,7 @@ html {
 		@include align-items(center);
 		> input {
 			@extend .h2;
+			line-height: 0;
 			text-align: right;
 		}
 	}
@@ -25,6 +26,7 @@ html {
 		@include display(flex);
 		padding: 0 4px;
 		> section {
+			overflow: hidden;
 			margin: 0 4px;
 			border-radius: 2px;
 			box-shadow: $ck4 0 0 0 1px;
@@ -35,13 +37,11 @@ html {
 			}
 			> header {
 				height: 64px;
-				border-top-left-radius: 2px;
-				border-top-right-radius: 2px;
+				box-shadow: $ck4 0 1px;
 			}
 			> footer {
 				height: 64px;
-				border-bottom-left-radius: 2px;
-				border-bottom-right-radius: 2px;
+				box-shadow: $ck4 0 -1px;
 			}
 		}
 	}
@@ -58,6 +58,8 @@ html {
 				@include align-items(center);
 				> span {
 					@extend .h2;
+					position: relative;
+					top: 2px;
 					margin: 0 16px;
 				}
 			}
@@ -68,7 +70,7 @@ html {
 			}
 		}
 		> ul {
-			padding: 4px 16px;
+			padding: 0 16px;
 			margin: 0;
 			list-style-type: none;
 			@include flex(1);
@@ -93,6 +95,8 @@ html {
 				@include align-items(center);
 				> input {
 					@extend .d2;
+					position: relative;
+					top: 1px;
 					@include flex(1);
 					margin: 0 8px;
 				}
@@ -166,20 +170,17 @@ html {
 			margin: .5px;
 		}
 	}
-	@each $prefix in "-webkit-", "-moz-", "-ms-", "-o-" {
-		progress::#{unquote($prefix)}progress-inner-element {
-			@include appearance(none);
-		}                  
-	}
+	progress {
+		@include appearance(none);
+		height: 2px;
+	}  
 	@each $prefix in "-webkit-", "-moz-", "-ms-", "-o-" {
 		progress::#{unquote($prefix)}progress-bar {
-			@include appearance(none);
 			background-color: $ck2;
 		}
 	}
 	@each $prefix in "-webkit-", "-moz-", "-ms-", "-o-" {
 		progress::#{unquote($prefix)}progress-value {
-			@include appearance(none);
 			background-color: $cb;
 		}                  
 	}
