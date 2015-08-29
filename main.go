@@ -54,14 +54,14 @@ func main() {
 
 	fs := http.FileServer(http.Dir("static/"))
 
-	r.PathPrefix("/").Handler(fs)
-
 	if Dev {
 		r.HandleFunc("/test", handlerTest)
 		r.HandleFunc("/websocket-testing.js", handlerTestJS)
 
 		r.HandleFunc("/colortest", handlerTestColor)
 	}
+
+	r.PathPrefix("/").Handler(fs)
 
 	if Commit != "" {
 		log.Printf("  Running commit %s", Commit)
