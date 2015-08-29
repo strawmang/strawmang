@@ -133,7 +133,6 @@ func (s *Server) Start() error {
 						v.Events <- event
 					}
 				}
-			default:
 			}
 		}
 	}()
@@ -258,7 +257,6 @@ func (u *User) ListenEvents() {
 				u.conn.Write(data) // Ignore errors.
 			case <-u.Kill:
 				break loop
-			default:
 			}
 		}
 	}()
