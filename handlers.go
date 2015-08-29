@@ -19,7 +19,7 @@ type Status struct {
 
 // TODO: Not production ready.  Needs to save the index in memory and only reload it if the file changes
 func handlerIndex(rw http.ResponseWriter, req *http.Request) {
-	data, err := ioutil.ReadFile("index.html")
+	data, err := ioutil.ReadFile("static/strawman.html")
 	if err != nil {
 		// TODO: Pretty 503
 		rw.WriteHeader(http.StatusInternalServerError)
