@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"log"
 	"net/http"
 	"os"
@@ -9,6 +10,10 @@ import (
 
 	"github.com/gorilla/mux"
 	"github.com/strawmang/strawmang/chat"
+)
+
+var (
+	host = flag.String("host", ":8080", "The address and port to listen on")
 )
 
 // Dev is true when we detect a development environment the default
@@ -29,9 +34,11 @@ func init() {
 }
 
 func main() {
-	go func() {
-		log.Println(http.ListenAndServe("localhost:6060", nil))
-	}()
+	if Dev {
+		go func() {
+			log.Println(http.ListenAndServe("localhost:6060", nil))
+		}()
+	}
 	chat.GlobalServer.Start()
 	r := mux.NewRouter()
 
@@ -60,7 +67,8 @@ func main() {
 		log.Printf("  Running commit %s", Commit)
 	}
 
-	if err := http.ListenAndServe(":8080", r); err != nil {
+	log.Printf("Listening at: %v", *host)
+	if err := http.ListenAndServe(*host, r); err != nil {
 		log.Printf("http: %v", err.Error())
 	}
 }
