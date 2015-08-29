@@ -778,38 +778,37 @@ html {
     /* line 163, /Users/imogen/git/strawmang/static/css/_components.scss */
     .strawman button:active {
       font-size: 23px;
-      line-height: 23px;
       position: relative;
       margin: .5px; }
-  /* line 170, /Users/imogen/git/strawmang/static/css/_components.scss */
+  /* line 169, /Users/imogen/git/strawmang/static/css/_components.scss */
   .strawman progress::-webkit-progress-inner-element {
     -webkit-appearance: none;
     -moz-appearance: none;
     -ms-appearance: none;
     -o-appearance: none;
     appearance: none; }
-  /* line 170, /Users/imogen/git/strawmang/static/css/_components.scss */
+  /* line 169, /Users/imogen/git/strawmang/static/css/_components.scss */
   .strawman progress::-moz-progress-inner-element {
     -webkit-appearance: none;
     -moz-appearance: none;
     -ms-appearance: none;
     -o-appearance: none;
     appearance: none; }
-  /* line 170, /Users/imogen/git/strawmang/static/css/_components.scss */
+  /* line 169, /Users/imogen/git/strawmang/static/css/_components.scss */
   .strawman progress::-ms-progress-inner-element {
     -webkit-appearance: none;
     -moz-appearance: none;
     -ms-appearance: none;
     -o-appearance: none;
     appearance: none; }
-  /* line 170, /Users/imogen/git/strawmang/static/css/_components.scss */
+  /* line 169, /Users/imogen/git/strawmang/static/css/_components.scss */
   .strawman progress::-o-progress-inner-element {
     -webkit-appearance: none;
     -moz-appearance: none;
     -ms-appearance: none;
     -o-appearance: none;
     appearance: none; }
-  /* line 175, /Users/imogen/git/strawmang/static/css/_components.scss */
+  /* line 174, /Users/imogen/git/strawmang/static/css/_components.scss */
   .strawman progress::-webkit-progress-bar {
     -webkit-appearance: none;
     -moz-appearance: none;
@@ -817,7 +816,7 @@ html {
     -o-appearance: none;
     appearance: none;
     background-color: rgba(0, 0, 0, 0.54); }
-  /* line 175, /Users/imogen/git/strawmang/static/css/_components.scss */
+  /* line 174, /Users/imogen/git/strawmang/static/css/_components.scss */
   .strawman progress::-moz-progress-bar {
     -webkit-appearance: none;
     -moz-appearance: none;
@@ -825,7 +824,7 @@ html {
     -o-appearance: none;
     appearance: none;
     background-color: rgba(0, 0, 0, 0.54); }
-  /* line 175, /Users/imogen/git/strawmang/static/css/_components.scss */
+  /* line 174, /Users/imogen/git/strawmang/static/css/_components.scss */
   .strawman progress::-ms-progress-bar {
     -webkit-appearance: none;
     -moz-appearance: none;
@@ -833,7 +832,7 @@ html {
     -o-appearance: none;
     appearance: none;
     background-color: rgba(0, 0, 0, 0.54); }
-  /* line 175, /Users/imogen/git/strawmang/static/css/_components.scss */
+  /* line 174, /Users/imogen/git/strawmang/static/css/_components.scss */
   .strawman progress::-o-progress-bar {
     -webkit-appearance: none;
     -moz-appearance: none;
@@ -841,7 +840,7 @@ html {
     -o-appearance: none;
     appearance: none;
     background-color: rgba(0, 0, 0, 0.54); }
-  /* line 181, /Users/imogen/git/strawmang/static/css/_components.scss */
+  /* line 180, /Users/imogen/git/strawmang/static/css/_components.scss */
   .strawman progress::-webkit-progress-value {
     -webkit-appearance: none;
     -moz-appearance: none;
@@ -849,7 +848,7 @@ html {
     -o-appearance: none;
     appearance: none;
     background-color: #7699d4; }
-  /* line 181, /Users/imogen/git/strawmang/static/css/_components.scss */
+  /* line 180, /Users/imogen/git/strawmang/static/css/_components.scss */
   .strawman progress::-moz-progress-value {
     -webkit-appearance: none;
     -moz-appearance: none;
@@ -857,7 +856,7 @@ html {
     -o-appearance: none;
     appearance: none;
     background-color: #7699d4; }
-  /* line 181, /Users/imogen/git/strawmang/static/css/_components.scss */
+  /* line 180, /Users/imogen/git/strawmang/static/css/_components.scss */
   .strawman progress::-ms-progress-value {
     -webkit-appearance: none;
     -moz-appearance: none;
@@ -865,7 +864,7 @@ html {
     -o-appearance: none;
     appearance: none;
     background-color: #7699d4; }
-  /* line 181, /Users/imogen/git/strawmang/static/css/_components.scss */
+  /* line 180, /Users/imogen/git/strawmang/static/css/_components.scss */
   .strawman progress::-o-progress-value {
     -webkit-appearance: none;
     -moz-appearance: none;
