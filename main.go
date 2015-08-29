@@ -5,6 +5,8 @@ import (
 	"net/http"
 	"os"
 
+	_ "net/http/pprof"
+
 	"github.com/gorilla/mux"
 	"github.com/strawmang/strawmang/chat"
 )
@@ -22,11 +24,14 @@ func init() {
 		log.Printf("strawmang server running in Dev mode")
 	}
 	if _, err := os.Stat("index.html"); err != nil {
-		log.Panic("No index.html found;  fix the deployment")
+		log.Printf("No index.html found;  fix the deployment")
 	}
 }
 
 func main() {
+	go func() {
+		log.Println(http.ListenAndServe("localhost:6060", nil))
+	}()
 	chat.GlobalServer.Start()
 	r := mux.NewRouter()
 

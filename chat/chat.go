@@ -262,6 +262,7 @@ func (u *User) ListenEvents() {
 	}()
 }
 
+// HandlerChat is called in a goroutine for every connection the websocket accepts.
 func HandlerChat(conn *websocket.Conn) {
 	defer log.Printf("Closing websocket connection")
 	log.Printf("New websocket connection")
