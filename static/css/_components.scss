@@ -30,6 +30,9 @@ html {
 			box-shadow: $ck4 0 0 0 1px;
 			@include flex(1);
 			@include flex-basis(0);
+			&:empty {
+				background-color: $ckb;
+			}
 			> header {
 				height: 64px;
 				border-top-left-radius: 2px;
